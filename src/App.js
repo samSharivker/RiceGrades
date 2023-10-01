@@ -1,10 +1,21 @@
 import './App.css';
-import Temp from './components/Temp';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Developers from './pages/Developers';
+import Contact from './pages/Contact';
+import NoPage from './pages/NoPage';
 
 function App() {
   return (
     <div className="App">
-      <Temp />
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<Home />} />
+          <Route path="/developers" element={<Developers />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<NoPage />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
