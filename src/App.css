@@ -1,0 +1,37 @@
+:root {
+    --mbc: #710C04;
+    --sbc: #0A090C;
+    --main-font-size: 25px;
+    --fc: #F0EDEE;
+    --mshadow: 5px 5px 6px var(--mbc);
+}
+
+.navbar-toggler {
+    height: 5vh;
+    width: 5vh;
+}
+
+nav span,i {
+    color: var(--fc);
+    font-size: var(--main-font-size);
+    font-weight: bold;
+}
+
+#navbar-wrapper {
+    background-color: var(--sbc);
+    padding: 1rem;
+    height: 11vh;
+}
+
+.navbar-collapse {
+    background-color: var(--sbc);
+    padding: 0 1em;
+}
+
+.navbar-toggler-icon {
+    background-color: white;
+}
+
+.navbar-toggler-icon:active {
+    background-color: transparent;
+}
