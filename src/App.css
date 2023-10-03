@@ -1,6 +1,6 @@
 :root {
-    --mbc: #710C04;
-    --sbc: #0A090C;
+    --mbc: #B0D9B1;
+    --sbc: #618264;
     --main-font-size: 25px;
     --fc: #F0EDEE;
     --mshadow: 5px 5px 6px var(--mbc);
@@ -32,6 +32,22 @@ nav span,i {
     background-color: white;
 }
 
-.navbar-toggler-icon:active {
-    background-color: transparent;
+body {
+    margin: 0;
+    background-color: var(--sbc);
+}
+
+#home-1 {
+    height: 50vh;
+}
+
+#home-2 {
+    height: 100vh;
+    background-color: var(--mbc);
+}
+
+@media only screen and (max-width: 250px) {
+    #navbar-wrapper {
+        height: 15vh;
+    }
 }
