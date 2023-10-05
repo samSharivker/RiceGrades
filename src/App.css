@@ -32,6 +32,18 @@ nav span,i {
     background-color: white;
 }
 
+footer {
+    height: 10vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+footer .footer-link {
+    text-decoration: none;
+    color: black;
+}
+
 body {
     margin: 0;
     background-color: var(--sbc);
@@ -39,6 +51,9 @@ body {
 
 #home-1 {
     height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #home-2 {
@@ -49,5 +64,23 @@ body {
 @media only screen and (max-width: 250px) {
     #navbar-wrapper {
         height: 15vh;
+    }
+}
+
+@media only screen and (max-width: 424px) {
+    footer {
+        height: 15vh;
+    }
+}
+
+@media only screen and (max-width: 269px) {
+    footer {
+        height: 20vh;
+    }
+}
+
+@media only screen and (max-width: 177px) {
+    footer {
+        height: 30vh;
     }
 }
