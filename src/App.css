@@ -37,11 +37,12 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--fc);
 }
 
 footer .footer-link {
     text-decoration: none;
-    color: black;
+    color: var(--fc);
 }
 
 body {
@@ -56,9 +57,26 @@ body {
     justify-content: center;
 }
 
+#home-1 #home-top {
+    font-size: 6em;
+}
+
+#home-1 #home-mid {
+    font-size: 2em;
+}
+
 #home-2 {
     height: 100vh;
     background-color: var(--mbc);
+}
+
+@media only screen and (max-width: 345px) {
+    #home-1 #home-top {
+        font-size: 4em;
+    }
+    #home-1 #home-mid {
+        font-size: 1em;
+    }
 }
 
 @media only screen and (max-width: 250px) {

@@ -10,9 +10,9 @@ function Home() {
                 <div className="container-fluid">
                     <div className="container text-center">
                         <div id="wrapper">
-                            <h1 className="display-1">Rice Grades</h1>
-                            <h3>"Cook your Grades like your Rice"</h3>
-                            <h6>- Jiaming</h6>
+                            <h id="home-top">Rice Grades</h> <br />
+                            <h id="home-mid">"Cook your Grades like your Rice"</h> <br />
+                            <h>- Jiaming Lin</h>
                         </div>
                     </div>
                 </div>
