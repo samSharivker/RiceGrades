@@ -1,7 +1,7 @@
 function Developers() {
     return (
         <div>
-            <h1>Developers</h1>
+            <h1>Developers Page Coming Soon!</h1>
         </div>
     )
 }
