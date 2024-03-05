@@ -17,7 +17,7 @@ function Home() {
             <section id="about">
                 <div class="about">
                     <div class="container">
-                        <img src={Logo} alt="temp" />
+                        <img src={Logo} alt="App Logo" />
                         <p>Professional Grading App for Students by Students</p>
                     </div>
                 </div>
@@ -33,9 +33,9 @@ function Home() {
                                 <img id="slide-3" src="https://placehold.co/640x360/FF2400/FFF" alt="temp" />
                             </div>
                             <div class="slider-nav">
-                                <a href="#slide-1"></a>
-                                <a href="#slide-2"></a>
-                                <a href="#slide-3"></a>
+                                <a href="#slide-1">.</a>
+                                <a href="#slide-2">.</a>
+                                <a href="#slide-3">.</a>
                             </div>
                         </div>
                     </div>

@@ -3,7 +3,7 @@ function Footer() {
         <div>
             <footer>
                 <div class="container">
-                    <a href="#">Support</a>
+                    <a href="/#">Support</a>
                     <a href="/developers">Developers</a>
                     <a href="/changeLog">Changelog</a>
                 </div>

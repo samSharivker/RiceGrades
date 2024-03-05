@@ -163,6 +163,7 @@ nav {
     background-color: #fff;
     opacity: 0.75;
     transition: opacity ease 250ms;
+    color: rgba(0, 0, 0, 0);
 }
 
 .slider-nav a:hover {
