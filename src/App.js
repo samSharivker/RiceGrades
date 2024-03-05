@@ -5,8 +5,8 @@ import Developers from './pages/Developers';
 import Contact from './pages/Contact';
 import ChangeLog from './pages/ChangeLog';
 import NoPage from './pages/NoPage';
-import Student from './pages/student';
-import Teacher from './pages/teacher';
+import Student from './pages/Student';
+import Teacher from './pages/Teacher';
 
 function App() {
   return (
