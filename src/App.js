@@ -17,8 +17,8 @@ function App() {
           <Route path="/developers" element={<Developers />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/changelog" element={<ChangeLog />} />
-          <Route path="/Student" element={<Student />} />
-          <Route path="/Teacher" element={<Teacher />} />
+          <Route path="/student" element={<Student />} />
+          <Route path="/teacher" element={<Teacher />} />
           <Route path="*" element={<NoPage />} />
         </Routes>
       </BrowserRouter>
