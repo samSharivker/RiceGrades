@@ -3,6 +3,11 @@
 
 :root {
     --body-color: green;
+    --main-bg-color: #618264;
+    --secondary-bg-color: #79AC78;
+    --sam-dev-card-color: var(--main-bg-color);
+    --yu-dev-card-color: var(--secondary-bg-color);
+    --ben-dev-card-color: var(--main-bg-color);
 }
 
 * {
@@ -20,7 +25,7 @@ nav {
     justify-content: space-between;
     padding: 10px;
     font-size: 2rem;
-    background-color: #618264;
+    background-color: var(--main-bg-color);
     width: 100%;
 }
 
@@ -41,11 +46,11 @@ nav {
 }
 
 #header {
-    background-color: #618264;
+    background-color: var(--main-bg-color);
 }
 
 .header {
-    background-color: #618264;
+    background-color: var(--main-bg-color);
     max-width: 1400px;
     margin: 0 auto;
 }
@@ -72,11 +77,11 @@ nav {
 }
 
 #about {
-    background-color: #79AC78;
+    background-color: var(--secondary-bg-color);
 }
 
 .about {
-    background-color: #79AC78;
+    background-color: var(--secondary-bg-color);
     max-width: 1400px;
     margin: 0 auto;
 }
@@ -103,11 +108,11 @@ nav {
 }
 
 #gallery {
-    background-color: #618264;
+    background-color: var(--main-bg-color);
 }
 
 .gallery {
-    background-color: #618264;
+    background-color: var(--main-bg-color);
     max-width: 1400px;
     margin: 0 auto;
     text-align: center;
@@ -172,7 +177,7 @@ nav {
 }
 
 footer {
-    background-color: #79AC78;
+    background-color: var(--secondary-bg-color);
     padding: 2rem;
     display: flex;
     flex-direction: column;
@@ -232,27 +237,27 @@ footer a {
 }
 
 #developers-page > section:nth-child(2) {
-    background-color: #618264;
+    background-color: var(--sam-dev-card-color);
 }
 
 #sam-dev-card {
-    background-color: #618264;
+    background-color: var(--sam-dev-card-color);
 }
 
 #developers-page > section:nth-child(3) {
-    background-color: #79AC78;
+    background-color: var(--yu-dev-card-color);
 }
 
 #yu-dev-card {
-    background-color: #79AC78;
+    background-color: var(--yu-dev-card-color);
 }
 
 #developers-page > section:nth-child(4) {
-    background-color: #618264;
+    background-color: var(--ben-dev-card-color);
 }
 
 #ben-dev-card {
-    background-color: #618264;
+    background-color: var(--ben-dev-card-color);
 }
 
 @media screen and (max-width: 768px) {
