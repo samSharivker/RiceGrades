@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import { Link } from 'react-router-dom';
-import Changelog from '../pages/ChangeLog';
-
-=======
->>>>>>> e605208fad3d22edd140a87125c6cbc03b854ab0
 function Footer() {
     return (
         <div>
