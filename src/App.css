@@ -193,6 +193,65 @@ footer a {
     font-weight: bold;
 }
 
+.developers {
+    max-width: 1400px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.developers .container {
+    padding: 5rem 2rem 5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.developers img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 50%;
+}
+
+.developers h {
+    font-size: 3rem;
+}
+
+.developers .dev-title {
+    font-size: 2rem;
+}
+
+.developers .dev-bio {
+    font-size: 1.5rem;
+}
+
+#developers-page > section:nth-child(2) {
+    background-color: #618264;
+}
+
+#sam-dev-card {
+    background-color: #618264;
+}
+
+#developers-page > section:nth-child(3) {
+    background-color: #79AC78;
+}
+
+#yu-dev-card {
+    background-color: #79AC78;
+}
+
+#developers-page > section:nth-child(4) {
+    background-color: #618264;
+}
+
+#ben-dev-card {
+    background-color: #618264;
+}
+
 @media screen and (max-width: 768px) {
     .header .container {
         flex-direction:  column;
@@ -225,5 +284,13 @@ footer a {
     }
     .gallery h {
         font-size: 3.5rem;
+    }
+    footer .container {
+        flex-wrap: wrap;
+        line-height: 0.8;
+        gap: 0.25rem;
+    }
+    footer {
+        gap: 0.25rem;
     }
 }
