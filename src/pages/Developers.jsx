@@ -4,7 +4,7 @@ import Footer from '../components/Footer';
 function Developers() {
     let samBio = "Lorem ipsum";
     let yuBio = "Lorem ipsum";
-    let benBio = "git";
+    let benBio = "I like math.";
     return (
         <div id="developers-page">
             <Nav />

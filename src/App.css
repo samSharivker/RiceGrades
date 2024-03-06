@@ -35,8 +35,8 @@ nav {
     gap: 20px;
 }
 
-.logo a:hover, .links a:hover {
-    background-color: white;
+.logo a:hover, .links a:hover, {
+    background-color: #b1c5b3;
     padding: 1px;
 }
 
