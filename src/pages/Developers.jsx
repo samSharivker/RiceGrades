@@ -1,10 +1,10 @@
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 
-function Developers() {
-    let samBio = '"I love getting my whole class extra credit just to get a 55% on my AP Calc Quiz."';
-    let yuBio = '"I love getting 70% on my AP Calc test."';
-    let benBio = '"I like math."';
+export default function Developers() {
+    const samBio = '"I love getting my whole class extra credit just to get a 55% on my AP Calc Quiz."';
+    const yuBio = '"I love getting 70% on my AP Calc test."';
+    const benBio = '"I like math."';
     return (
         <div id="developers-page">
             <Nav />
@@ -42,5 +42,3 @@ function Developers() {
         </div>
     )
 }
-
-export default Developers;

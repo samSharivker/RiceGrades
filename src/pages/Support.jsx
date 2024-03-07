@@ -2,7 +2,7 @@ import SupportForm from '../components/SupportForm';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 
-function Support() {
+export default function Support() {
     return (
         <div>
             <Nav />
@@ -11,5 +11,3 @@ function Support() {
         </div>
     )
 }
-
-export default Support;

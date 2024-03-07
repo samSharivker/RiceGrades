@@ -9,7 +9,7 @@ if (changing === false){
     whatChanged = "Something changed";
 };
 
-function ChangeLog() {
+export default function ChangeLog() {
     return (
         <>
             <Nav />
@@ -21,5 +21,3 @@ function ChangeLog() {
         </>
     )
 }
-
-export default ChangeLog;

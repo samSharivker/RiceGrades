@@ -2,7 +2,7 @@ import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import Logo from '../img/logo.png';
 
-function Home() {
+export default function Home() {
     return (
         <div>
             <Nav />
@@ -14,14 +14,16 @@ function Home() {
                     </div>
                 </div>
             </section>
-            <section id="about">
-                <div className="about">
-                    <div className="container">
-                        <img src={Logo} alt="App Logo" />
-                        <p>Professional Grading App for Students by Students</p>
+            <main>
+                <section id="about">
+                    <div className="about">
+                        <div className="container">
+                            <img src={Logo} alt="App Logo" />
+                            <p>Professional Grading App for Students by Students</p>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            </main>
             <div id="gallery">
                 <div className="gallery">
                     <div className="container">
@@ -45,5 +47,3 @@ function Home() {
         </div>
     )
 }
-
-export default Home;
