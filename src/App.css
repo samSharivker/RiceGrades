@@ -294,6 +294,10 @@ footer a {
     border: 3px solid black;
 }
 
+.sp-input-wrapper input:focus, .sp-input-wrapper textarea:focus {
+    outline: none;
+}
+
 .sp-input-wrapper input {
     font-size: 2rem;
     padding: 10px;
