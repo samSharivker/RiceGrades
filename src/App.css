@@ -207,12 +207,16 @@ footer a {
 }
 
 .developers .container {
-    padding: 5rem 2rem 5rem 2rem;
+    padding: 2rem 2rem 0rem 2rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
+}
+
+#developers-page svg {
+    margin-bottom: -10px;
 }
 
 .developers img {
@@ -398,3 +402,4 @@ footer a {
         gap: 0.25rem;
     }
 }
+
