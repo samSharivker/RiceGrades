@@ -11,7 +11,7 @@ function Developers() {
             <section>
                 <div className="developers">
                     <div className="container" id="sam-dev-card">
-                        <img src="https://placehold.co/150x150.png" alt="Developer" />
+                        <img src="https://github.com/samuels0052.png" height="150" width="150" alt="Developer" />
                         <h>Samuel Sharivker</h>
                         <p className="dev-title">Lead Developer</p>
                         <p className="dev-bio">{samBio}</p>
@@ -21,7 +21,7 @@ function Developers() {
             <section>
                 <div className="developers">
                     <div className="container" id="yu-dev-card">
-                        <img src="https://placehold.co/150x150/000000/FFF.png" alt="Developer" />
+                        <img src="https://github.com/zixuany7791.png" height="150" width="150" alt="Developer" />
                         <h>Zi Xuan Yu</h>
                         <p className="dev-title">Chief Firebase Developer</p>
                         <p className="dev-bio">{yuBio}</p>
@@ -31,7 +31,7 @@ function Developers() {
             <section>
                 <div className="developers">
                     <div className="container" id="ben-dev-card">
-                        <img src="https://placehold.co/150x150/00F0FF/FFF.png" alt="Developer" />
+                        <img src="https://github.com/benjaminc8190.png" height="150" width="150" alt="Developer" />
                         <h>Benjamin The Chau</h>
                         <p className="dev-title">Chief React Developer</p>
                         <p className="dev-bio">{benBio}</p>
