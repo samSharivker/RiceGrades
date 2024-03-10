@@ -207,7 +207,7 @@ footer a {
 }
 
 .developers .container {
-    padding: 2rem 2rem 0rem 2rem;
+    padding: 0rem 2rem 0rem 2rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -240,12 +240,18 @@ svg {
     font-style: normal;
 }
 
+.developers a {
+    color: black;
+    text-decoration: none;
+}
+
 #developers-page > section:nth-child(2) {
     background-color: var(--sam-dev-card-color);
 }
 
 #sam-dev-card {
     background-color: var(--sam-dev-card-color);
+    padding-top: 2rem;
 }
 
 #developers-page > section:nth-child(3) {
@@ -262,6 +268,7 @@ svg {
 
 #ben-dev-card {
     background-color: var(--ben-dev-card-color);
+    padding-bottom: 2rem;
 }
 
 #support-form {
