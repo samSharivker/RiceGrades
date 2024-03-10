@@ -338,12 +338,29 @@ svg {
     .sp-input-wrapper input, .sp-input-wrapper textarea{
         width: 30rem;
     }
+    .about .container {
+        flex-direction:  column;
+        gap: 0rem;
+    }
+    .about p {
+        text-align: center;
+    }
+    .header .container {
+        flex-direction:  column;
+    }
 }
 
 @media screen and (max-width: 576px) {
     .sp-input-wrapper input, .sp-input-wrapper textarea{
         width: 20rem;
         font-size: 1rem;
+    }
+    .about p {
+        font-size: 3rem;
+    }
+    .gallery h {
+        font-size: 4rem;
+        line-height: 1;
     }
 }
 
@@ -360,33 +377,7 @@ svg {
     }
 }
 
-@media screen and (max-width: 768px) {
-    .header .container {
-        flex-direction:  column;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    .about .container {
-        flex-direction:  column;
-        gap: 0rem;
-    }
-    .about p {
-        text-align: center;
-    }
-}
-
-@media screen and (max-width: 576px) {
-    .about p {
-        font-size: 3rem;
-    }
-    .gallery h {
-        font-size: 4rem;
-        line-height: 1;
-    }
-}
-
-@media screen and (max-width:300px) {
+@media screen and (max-width: 300px) {
     .about p {
         font-size: 2rem;
     }
