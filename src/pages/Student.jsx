@@ -6,4 +6,4 @@ function Student() {
     )
 }
 
-export default Students;
+export default Student;

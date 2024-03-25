@@ -18,20 +18,18 @@ function Home() {
                 </div>
             </div>
             <div id="home-2">
-                <div className="container-fluid">
-                    <div className="row pt-5">
-                        <div className="col-md-6 left">
-                            <div className="container text-center">
-                                <img src={Logo} alt="logo" class="img-fluid" height="300" width="300" />
-                            </div>
+                <div className="grid text-center">
+                        <div className="g-col-6">
+                            {/* <div className="container text-center"> */}
+                                <img src={Logo} alt="logo" class="img-fluid rounded mx-auto d-block" height="300" width="300" />
+                            {/* </div> */}
                         </div>
-                        <div className="col-md-6 right">
-                            <div className="container text-center">
+                        <div className="g-col-6">
+                            {/* <div className="container text-center"> */}
                                 <h id="line-1">Professional Grading App</h> <br />
                                 <h id="line-2">Created by Students For Students</h>
-                            </div>
+                            {/* </div> */}
                         </div>
-                    </div>
                 </div>
             </div>
             <Footer />
