@@ -1,4 +1,4 @@
-function NoPage() {
+export default function NoPage() {
     const msg = "Error: 404 No Rice was Found :(";
     return (
         <div>
@@ -6,5 +6,3 @@ function NoPage() {
         </div>
     )
 }
-
-export default NoPage;
