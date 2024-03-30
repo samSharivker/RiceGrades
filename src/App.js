@@ -7,6 +7,7 @@ import NoPage from './pages/NoPage';
 import Student from './pages/Student';
 import Teacher from './pages/Teacher';
 import Support from './pages/Support';
+import Login from './pages/Login';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/student" element={<Student />} />
           <Route path="/teacher" element={<Teacher />} />
           <Route path="/support" element={<Support />} />
+          <Route path="/login" element={<Login />} />
           <Route path="*" element={<NoPage />} />
         </Routes>
       </BrowserRouter>

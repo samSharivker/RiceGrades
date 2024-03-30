@@ -1,3 +1,4 @@
+
 export default function Nav() {
     return (
         <nav>
@@ -5,7 +6,7 @@ export default function Nav() {
                 <a href="/#">Rice Grades</a>
             </div>
             <div className="links">
-                <a href="/#">Login</a>
+                <a href="Login">Login</a>
             </div>
         </nav>
     );
