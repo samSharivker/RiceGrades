@@ -40,6 +40,7 @@ export default function Home() {
                                 <a href="#slide-3">.</a>
                             </div>
                         </div>
+                    </div>
                 </div>
             </div>
             <Footer />
