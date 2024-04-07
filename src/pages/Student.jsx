@@ -1,7 +1,10 @@
 import React from 'react';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
-
+import {
+  signOut
+} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js'
+import { auth } from '../firebase'
 const grading=[
     "Math: 50%",
     "History:75%",
@@ -18,10 +21,20 @@ const Grades = (props) => {
 
 export default class Student extends React.Component {
     render() {
+      const handleSignOut = () => {
+        signOut(auth)
+          .then(() => console.log("Sign Out"))
+          .catch((error) => console.log(error));
+      };
       return (
         <div>
-            <Nav />
+            <nav>
+                <div className="logo">
+                    <a href="/#">Rice Grades</a>
+                </div>
+            </nav>
             <Grades grade={grading} />
+            <button onClick={handleSignOut}>Sign Out</button>
             <Footer />
         </div>
       );
