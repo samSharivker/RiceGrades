@@ -7,7 +7,7 @@ import NoPage from './pages/NoPage';
 import Student from './pages/Student';
 import Teacher from './pages/Teacher';
 import Support from './pages/Support';
-import Login from './pages/Login';
+import Login from './components/Login';
 
 function App() {
   return (
