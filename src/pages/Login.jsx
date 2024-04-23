@@ -28,6 +28,10 @@ export default function Login({ user }) {
     // function to sign up user
     const handleSignUp = (event) => {
         event.preventDefault();
+        if(roles[role] == undefined) {
+            alert("Must Pick a Role!")
+            return
+        }
         if(!email || !password) return;
             createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
@@ -47,6 +51,10 @@ export default function Login({ user }) {
     // function for user to login
     const handleSignIn = (event) => {
         event.preventDefault();
+        if(roles[role] == undefined) {
+            alert("Must Pick a Role!")
+            return
+        }
         if(!email || !password) return;
             signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
@@ -75,7 +83,6 @@ export default function Login({ user }) {
         setRole(1)
     }
     if (user) {
-        console.log(roles[role])
         return <Navigate to={"/" + roles[role]}></Navigate>;
     }
 
