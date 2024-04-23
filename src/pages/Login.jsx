@@ -26,7 +26,8 @@ export default function Login({ user }) {
         setIsSignUpActive(!isSignUpActive)
     }
     // function to sign up user
-    const handleSignUp = () => {
+    const handleSignUp = (event) => {
+        event.preventDefault();
         if(!email || !password) return;
             createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
@@ -38,12 +39,14 @@ export default function Login({ user }) {
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                console.log(errorCode, errorMessage)
+                // console.log(errorCode, errorMessage)
+                alert(errorMessage);
                 // ..
             });
         }
     // function for user to login
-    const handleSignIn = () => {
+    const handleSignIn = (event) => {
+        event.preventDefault();
         if(!email || !password) return;
             signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
@@ -55,7 +58,8 @@ export default function Login({ user }) {
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                console.log(errorCode, errorMessage)
+                //console.log(errorCode, errorMessage)
+                alert(errorMessage)
                 // ..
             });
     }
@@ -93,15 +97,15 @@ export default function Login({ user }) {
                         <ul>
                             <li>
                                 <label htmlFor="email">Email</label>
-                                <input type="text" id="email" onChange={handleEmailChange} />
+                                <input type="text" id="email" onChange={handleEmailChange} required/>
                             </li>
                             <li>
                                 <label htmlFor="password">Password</label>
-                                <input type="password" id="password" onChange={handlePasswordChange}/>
+                                <input type="password" id="password" onChange={handlePasswordChange} required/>
                             </li>
                         </ul>
-                        {!isSignUpActive && <button type="button" onClick={handleSignIn}>Sign In</button>}
-                        {isSignUpActive && <button type="button" onClick={handleSignUp}>Sign Up</button>}
+                        {!isSignUpActive && <button type="submit" onClick={handleSignIn}>Sign In</button>}
+                        {isSignUpActive && <button type="submit" onClick={handleSignUp}>Sign Up</button>}
                     </fieldset>
                     {!isSignUpActive && <a onClick={handleMethodChange}>Create an account</a>}
                     {isSignUpActive && <a onClick={handleMethodChange}>Login</a>}
