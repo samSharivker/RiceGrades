@@ -1,9 +1,25 @@
+import {useState} from 'react';
+
+
 export default function Teacher() {
-    var aymen = "dogwater"
-    console.log(aymen)
+    var grades = []//needs to be local 
+    var gradeSystem = ""
+    const [val, setVal] = useState("Enter Grade")
+    const click = () => {
+        alert(val)//Grade submitted
+        grades.push(val)
+        console.log(grades.join("|"))
+        gradeSystem = grades.join("|")
+    }
+    const change = event => {
+       setVal(event.target.value)
+    }
+
     return (
         <div>
-            <h1>Please tell us that aymen is  {aymen} !!</h1>
+            <input onChange={change} value = {val}/>
+            <button onClick = {click}>Submit grade</button>
+            <p>These are your students' grades: {gradeSystem}</p>
         </div>
     )
 }
