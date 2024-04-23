@@ -1,7 +1,9 @@
 export default function Teacher() {
+    var aymen = "dogwater"
+    console.log(aymen)
     return (
         <div>
-            <h1>Please tell us your students' grades!</h1>
+            <h1>Please tell us that aymen is  {aymen} !!</h1>
         </div>
     )
 }

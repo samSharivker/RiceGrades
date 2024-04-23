@@ -16,11 +16,12 @@ import { Navigate } from "react-router-dom";
 
 
 export default function Login({ user }) {
+    const [role, setRole] = useState(3);
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [isSignUpActive, setIsSignUpActive] = useState(true)
 
-    // function to
+    // function to change register to login or other way around
     const handleMethodChange = () =>  {
         setIsSignUpActive(!isSignUpActive)
     }
@@ -61,9 +62,19 @@ export default function Login({ user }) {
 
     const handleEmailChange = (event) => setEmail(event.target.value)
     const handlePasswordChange = (event) => setPassword(event.target.value)
+
+    const roles = ["student", "teacher"]
+    function studentRole(){
+        setRole(0)
+    }
+    function teacherRole(){
+        setRole(1)
+    }
     if (user) {
-        return <Navigate to="/student"></Navigate>;
-      }
+        console.log(roles[role])
+        return <Navigate to={"/" + roles[role]}></Navigate>;
+    }
+
     return (
         <div>
             <nav>
@@ -71,6 +82,10 @@ export default function Login({ user }) {
                     <a href="/#">Rice Grades</a>
                 </div>
             </nav>
+            <form>
+                <button type="button" onClick={studentRole}>student</button>
+                <button type="button" onClick={teacherRole}>teacher</button>
+            </form>
                 <form>
                     {!isSignUpActive && <legend>Sign In</legend>}
                     {isSignUpActive && <legend>Sign Up</legend>}
@@ -94,6 +109,7 @@ export default function Login({ user }) {
             <Footer />
         </div>
     )
+     // redirect user to student page after login
 }
 
 
