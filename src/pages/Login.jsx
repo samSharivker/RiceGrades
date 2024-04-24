@@ -8,18 +8,13 @@ import {
 import { useState } from 'react';
 import { Navigate } from "react-router-dom";
 
-
-
-
-
-
-
-
 export default function Login({ user }) {
     const [role, setRole] = useState(3);
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [isSignUpActive, setIsSignUpActive] = useState(true)
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastname, setLastName] = useState("");
+    const [isSignUpActive, setIsSignUpActive] = useState(true);
 
     // function to change register to login or other way around
     const handleMethodChange = () =>  {
@@ -76,11 +71,17 @@ export default function Login({ user }) {
     const handlePasswordChange = (event) => setPassword(event.target.value)
 
     const roles = ["student", "teacher"]
+    const lsb = document.querySelector("#lsb");
+    const ltb = document.querySelector("#ltb");
     function studentRole(){
         setRole(0)
+        lsb.style.backgroundColor = "blue";
+        ltb.style.backgroundColor = "#f0f0f0";
     }
     function teacherRole(){
         setRole(1)
+        lsb.style.backgroundColor = "#f0f0f0";
+        ltb.style.backgroundColor = "blue";
     }
     if (user) {
         return <Navigate to={"/" + roles[role]}></Navigate>;
@@ -94,20 +95,32 @@ export default function Login({ user }) {
                 </div>
             </nav>
             <form>
-                <button type="button" onClick={studentRole}>student</button>
-                <button type="button" onClick={teacherRole}>teacher</button>
+                <button id="lsb" type="button" onClick={studentRole}>student</button>
+                <button id="ltb" type="button" onClick={teacherRole}>teacher</button>
             </form>
                 <form>
                     {!isSignUpActive && <legend>Sign In</legend>}
                     {isSignUpActive && <legend>Sign Up</legend>}
                     <fieldset>
                         <ul>
+                        {isSignUpActive && (
+                            <>
+                                <li>
+                                    <label htmlFor="firstName">First Name:</label>
+                                    <input type="text" id="firstName" required/>
+                                </li>
+                                <li>
+                                    <label htmlFor="lastName">Last Name:</label>
+                                    <input type="text" id="lastName" required/>
+                                </li>
+                            </>
+                        )}
                             <li>
-                                <label htmlFor="email">Email</label>
+                                <label htmlFor="email">Email:</label>
                                 <input type="text" id="email" onChange={handleEmailChange} required/>
                             </li>
                             <li>
-                                <label htmlFor="password">Password</label>
+                                <label htmlFor="password">Password:</label>
                                 <input type="password" id="password" onChange={handlePasswordChange} required/>
                             </li>
                         </ul>
