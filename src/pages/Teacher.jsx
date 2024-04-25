@@ -53,13 +53,18 @@ export default class Teacher extends React.Component {
           alert("Must fill out all prompts correctly!");
           return;
         } else {
+          if((getSummativeWeight + getClassworkWeight + getIndependentWeight) !== 100) {
+            alert("Grade Weights must add up to 100!");
+            return
+          }
+
           try {
             const cleanGetStudents = getStudents.replace(/\s/g, '');
             const getStudentsArray = cleanGetStudents.split(",");
 
             getStudentsArray.forEach((i) => {
               const a = i.split("");
-              if(!a.includes("@")) {
+              if(!a.includes("@") || a.length < 2) {
                 throw new Error("Students were not added in the correct format. Please read the directions and try again!");
               }
             })
@@ -94,7 +99,7 @@ export default class Teacher extends React.Component {
               if(!result) {
                 alert("Generating Classroom!")
                 generateNewClassroom(data);
-                alert("Success!")
+                window.location.reload();
               } else {
                 alert("Classroom with this ID Already Exists. Please Try Again!")
               }
