@@ -1,20 +1,54 @@
 // import Nav from '../components/Nav';
 import Footer from '../components/Footer';
-import { app, auth } from '../firebase';
+import { app, auth, db } from '../firebase';
 import {
    createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js'
+} from 'firebase/auth'
+
 import { useState } from 'react';
 import { Navigate } from "react-router-dom";
+import { getDatabase, ref, set, child, get } from "firebase/database";
 
 export default function Login({ user }) {
+    const [redirect, setRedirect] = useState("");
     const [role, setRole] = useState(3);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastname, setLastName] = useState("");
     const [isSignUpActive, setIsSignUpActive] = useState(true);
+
+    //first name, last name, email, role, uid
+    function writeData(a, b, c, d, e) {
+        const reference = ref(db, 'users/' + e);
+        set(reference, {
+            "firstName": a,
+            "lastName": b,
+            "email": c,
+            "role": d,
+            "uid": e
+        })
+    }
+
+    //uid
+    function getUserRole(a) {
+        return new Promise((resolve, reject) => {
+            const dbRef = ref(db);
+            get(child(dbRef, 'users/' + a)).then((snapshot) => {
+                if(snapshot.exists()) {
+                    const result = snapshot.val().role;
+                    resolve(result);
+                } else {
+                    console.log("No data available");
+                    resolve(null); // Resolve with null if no data is available
+                }
+            }).catch((error) => {
+                console.log(error);
+                reject(error); // Reject with error if any error occurs
+            })
+        });
+    }
 
     // function to change register to login or other way around
     const handleMethodChange = () =>  {
@@ -27,12 +61,12 @@ export default function Login({ user }) {
             alert("Must Pick a Role!")
             return
         }
-        if(!email || !password) return;
+        if(!email || !password || !document.querySelector('#firstName').value || !document.querySelector('#lastName').value) return;
             createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 // Signed up
                 const user = userCredential.user;
-                console.log(user)
+                writeData(document.querySelector('#firstName').value, document.querySelector('#lastName').value, email, roles[role], user.uid)
                 // ...
             })
             .catch((error) => {
@@ -84,7 +118,18 @@ export default function Login({ user }) {
         ltb.style.backgroundColor = "blue";
     }
     if (user) {
-        return <Navigate to={"/" + roles[role]}></Navigate>;
+        getUserRole(user.uid)
+        .then((userRole) => {
+            setRedirect(userRole);
+        })
+        .catch((error) => {
+            console.error("Error fetching user role:", error);
+            // Handle error accordingly
+        });
+    }
+
+    if (redirect) {
+        return <Navigate to={`/${redirect}`}></Navigate>;
     }
 
     return (
