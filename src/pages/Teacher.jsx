@@ -1,25 +1,25 @@
-import {useState} from 'react';
+import React from 'react';
+import Nav from '../components/Nav';
+import Footer from '../components/Footer';
+import {
+  signOut
+} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js'
+import { auth } from '../firebase'
 
-
-export default function Teacher() {
-    var grades = []//needs to be local 
-    var gradeSystem = ""
-    const [val, setVal] = useState("Enter Grade")
-    const click = () => {
-        alert(val)//Grade submitted
-        grades.push(val)
-        console.log(grades.join("|"))
-        gradeSystem = grades.join("|")
-    }
-    const change = event => {
-       setVal(event.target.value)
-    }
-
-    return (
+export default class Teacher extends React.Component {
+    render() {
+      const handleSignOut = () => {
+        signOut(auth)
+          .then(() => console.log("Sign Out"))
+          .catch((error) => console.log(error));
+      };
+      return (
         <div>
-            <input onChange={change} value = {val}/>
-            <button onClick = {click}>Submit grade</button>
-            <p>These are your students' grades: {gradeSystem}</p>
+             <p>teacher page</p>
+            <button onClick={handleSignOut}>Sign Out</button>
+            <Footer />
         </div>
-    )
-}
+      );
+    }
+  };
+

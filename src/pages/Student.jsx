@@ -19,6 +19,8 @@ const Grades = (props) => {
     );
 };
 
+Grades.defaultProps = {}
+
 export default class Student extends React.Component {
     render() {
       const handleSignOut = () => {
