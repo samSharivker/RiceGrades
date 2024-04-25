@@ -36,6 +36,7 @@ function App() {
   if (isFetching) {
     return <h2>Loading...</h2>;
   }
+
   return (
     <div className="App">
       <BrowserRouter>
@@ -44,7 +45,7 @@ function App() {
           <Route path="/developers" element={<Developers />} />
           <Route path="/changelog" element={<ChangeLog />} />
           <Route path="/student" element={<ProtectedRoute user={user}><Student /></ProtectedRoute>} />
-          <Route path="/teacher" element={<ProtectedRoute user={user}><Teacher /></ProtectedRoute>} />
+          <Route path="/teacher" element={<ProtectedRoute user={user}><Teacher user={user}/></ProtectedRoute>} />
           <Route path="/support" element={<Support />} />
           <Route path="/login" element={<Login user={user}/>} />
           <Route path="*" element={<NoPage />} />
