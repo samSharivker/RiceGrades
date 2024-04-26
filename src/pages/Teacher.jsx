@@ -47,8 +47,10 @@ const Teacher = (props) => {
             for(let key in data) {
               if(data[key].email === target) {
                 resolve([data[key].firstName, data[key].lastName]);
+                return;
               }
             }
+            resolve(null);
           } else {
             resolve(null);
           }
@@ -58,8 +60,6 @@ const Teacher = (props) => {
         })
       })
     }
-
-    getStudents();
 
     //classroom, email to remove
     function removeFromClassroom(a, b) {
@@ -93,6 +93,48 @@ const Teacher = (props) => {
     }
 
 
+    function addStudent(classroom) {
+      const rawInput = prompt("Add students in the format of: \nStudent1 Account Email, Student 2 Account Email. \nFor example: 'test@gmail.com, jdoe@gmail.com'\n");
+
+      const cleanInput = rawInput.replace(/\s/g, '');
+      const input = cleanInput.split(",");
+
+      input.forEach((i) => {
+        const a = i.split("");
+        if(!a.includes("@") || a.length < 2) {
+          alert("Students were not added in the correct format. Please read the directions and try again!");
+          return;
+        }
+      })
+
+
+      input.forEach((i) => {
+        getStudents(i)
+        .then((result) => {
+          if(result === null) {
+            alert(`${i} does not have an account. Please have the student register first!`);
+            return;
+          } else if(classroom.students.includes(i)) {
+            alert("This student is already in your classroom!");
+            return;
+          } else {
+            alert("Done!")
+            const dbRef = ref(db);
+            get(child(dbRef, 'classrooms/' + classroom.id)).then((snapshot) => {
+              if(snapshot.exists()) {
+                let array = snapshot.val().students;
+                input.forEach((i) => {
+                  array.push(i)
+                })
+                set(ref(db, 'classrooms/' + classroom.id + '/students'), array)
+                window.location.reload();
+              }
+            })
+          }
+        })
+      })
+
+    }
 
     function displayClassroom(classroom) {
         const classroomWrapper = document.querySelector('.classroom-wrapper');
@@ -118,8 +160,17 @@ const Teacher = (props) => {
         viewStudentsButton.classList.add("view-students-button")
         viewStudentsButton.innerHTML = "Students";
 
+        const addStudentsButton = document.createElement("button");
+        addStudentsButton.classList.add("add-students-button");
+        addStudentsButton.innerHTML = "Add Students";
+
+        addStudentsButton.addEventListener("click", () => {
+          addStudent(classroom);
+        });
+
         viewStudentsButton.addEventListener("click", () => {
           if(document.querySelector('.deez') === null) {
+              studentWrapper.appendChild(addStudentsButton);
               classroom.students.forEach((i) => {
                   const student = document.createElement("p");
                   student.innerHTML = i;
@@ -151,6 +202,7 @@ const Teacher = (props) => {
             temp.forEach((i) => {
               i.remove();
             })
+            addStudentsButton.remove();
           }
       })
 
