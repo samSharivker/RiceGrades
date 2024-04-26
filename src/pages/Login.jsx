@@ -99,10 +99,10 @@ export default function Login({ user }) {
     // function for user to login
     const handleSignIn = (event) => {
         event.preventDefault();
-        if(roles[role] == undefined) {
-            alert("Must Pick a Role!")
-            return
-        }
+        // if(roles[role] == undefined) {
+        //     alert("Must Pick a Role!")
+        //     return
+        // }
         if(!email || !password) return;
             signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
@@ -125,13 +125,21 @@ export default function Login({ user }) {
     const ltb = document.querySelector("#ltb");
     function studentRole(){
         setRole(0)
-        lsb.style.backgroundColor = "#618264";
-        ltb.style.backgroundColor = "#D0E7D2";
+        if(lsb) {
+            lsb.style.backgroundColor = "#618264";
+        }
+        if(ltb) {
+            ltb.style.backgroundColor = "#D0E7D2";
+        }
     }
     function teacherRole(){
         setRole(1)
-        lsb.style.backgroundColor = "#D0E7D2";
-        ltb.style.backgroundColor = "#618264";
+        if(lsb) {
+            lsb.style.backgroundColor = "#D0E7D2";
+        }
+        if(ltb) {
+            ltb.style.backgroundColor = "#618264";
+        }
     }
     if (user) {
         getUserRole(user.uid)
@@ -178,13 +186,17 @@ export default function Login({ user }) {
                                 <input type="password" id="password" value={password} onChange={handlePasswordChange} required />
                             </li>
                         </ul>
-                        <form>
-                            <label>Role:</label>
-                            <div className="role-wrapper">
-                                <button id="lsb" type="button" onClick={studentRole}>student</button>
-                                <button id="ltb" type="button" onClick={teacherRole}>teacher</button>
-                            </div>
-                        </form>
+                        {!isSignUpActive && (
+                            <>
+                                <form>
+                                    <label>Role:</label>
+                                    <div className="role-wrapper">
+                                        <button id="lsb" type="button" onClick={studentRole}>student</button>
+                                        <button id="ltb" type="button" onClick={teacherRole}>teacher</button>
+                                    </div>
+                                </form>
+                            </>
+                        )}
                         {isSignUpActive && <button type="submit" onClick={handleSignIn}>Sign In</button>}
                         {!isSignUpActive && <button type="submit" onClick={handleSignUp}>Sign Up</button>}
                     </fieldset>

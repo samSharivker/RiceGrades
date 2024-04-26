@@ -412,7 +412,7 @@ svg {
 
 #login-page .form-wrapper {
     text-align: center;
-    padding: 5rem 0rem;
+    padding: 7rem 0rem;
     margin: 0 auto;
     justify-content: center;
     align-items: center;
@@ -422,7 +422,7 @@ svg {
 }
 
 #login-page fieldset {
-    padding: 3rem 0rem;
+    padding: 4rem 0rem;
     max-width: 35rem;
     background-color: var(--secondary-bg-color);
     border: 5px solid black;
