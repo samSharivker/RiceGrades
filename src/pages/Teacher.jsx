@@ -239,9 +239,9 @@ const Teacher = (props) => {
         const getSummativeWeight = parseInt(prompt("What percentage of a student's grade should Summative Assessments Count for?\n For example if you want it to be 50% of a students grade you would enter: '50'\n"));
         const getClassworkWeight = parseInt(prompt("What percentage of a student's grade should Classwork Count for?\n For example if you want it to be 40% of a students grade you would enter: '40'\n"));
         const getIndependentWeight = parseInt(prompt("What percentage of a student's grade should Independent Work Count for?\n For example if you want it to be 10% of a students grade you would enter: '10'\n"));
-        const getStudents = prompt("Add students in the format of: \nStudent1 Account Email, Student 2 Account Email. \nFor example: 'test@gmail.com, jdoe@gmail.com'\n");
+        const getStudentsPrompt = prompt("Add students in the format of: \nStudent1 Account Email, Student 2 Account Email. \nFor example: 'test@gmail.com, jdoe@gmail.com'\n");
 
-        if (!getName || !getStudents || !getSummativeWeight || !getClassworkWeight || !getIndependentWeight) {
+        if (!getName || !getStudentsPrompt || !getSummativeWeight || !getClassworkWeight || !getIndependentWeight) {
             alert("Must fill out all prompts correctly!");
             return;
         } else {
@@ -251,7 +251,7 @@ const Teacher = (props) => {
             }
 
             try {
-                const cleanGetStudents = getStudents.replace(/\s/g, '');
+                const cleanGetStudents = getStudentsPrompt.replace(/\s/g, '');
                 const getStudentsArray = cleanGetStudents.split(",");
 
                 getStudentsArray.forEach((i) => {
@@ -261,39 +261,63 @@ const Teacher = (props) => {
                     }
                 })
 
-                const lowerLetters = "abcdefghijklmnopqrstuvwxyz";
-                const upperLetters = lowerLetters.toUpperCase();
-                const numbers = "1234567890";
-                let generatedID = "";
-                let lengthOfId = 15;
-                for (let i = 0; i < lengthOfId; i++) {
-                    const combinedChars = lowerLetters + upperLetters + numbers;
-                    const index = Math.floor(Math.random() * combinedChars.length);
-                    generatedID += combinedChars[index]
-                }
+                const preventStudentDuplicatesArray = new Set();
+                getStudentsArray.forEach((i) => {
+                  preventStudentDuplicatesArray.add(i);
+                });
 
-                const data = {
-                    "id": generatedID,
-                    "name": getName,
-                    "gradingPolicy": {
-                        "summative": getSummativeWeight,
-                        "classwork": getClassworkWeight,
-                        "independent": getIndependentWeight
-                    },
-                    "teacher": user.user.uid,
-                    "students": getStudentsArray
-                }
+                const finalStudentsArray = [];
 
-                checkIfClassroomExists(data.id)
-                    .then((result) => {
-                        if (!result) {
-                            alert("Generating Classroom!")
-                            generateNewClassroom(data);
-                            window.location.reload();
-                        } else {
-                            alert("Classroom with this ID Already Exists. Please Try Again!")
-                        }
-                    });
+                preventStudentDuplicatesArray.forEach((i) => {
+                  finalStudentsArray.push(i);
+                });
+
+                finalStudentsArray.forEach((i) => {
+                  getStudents(i)
+                  .then((result) => {
+                    if(result === null) {
+                      const index = finalStudentsArray.indexOf(i);
+                      finalStudentsArray.splice(index, 1);
+                      alert(`${i} does not have an account. Please have the student register first!`);
+                    }
+                  })
+                })
+
+                if(finalStudentsArray.length > 1) {
+                  const lowerLetters = "abcdefghijklmnopqrstuvwxyz";
+                  const upperLetters = lowerLetters.toUpperCase();
+                  const numbers = "1234567890";
+                  let generatedID = "";
+                  let lengthOfId = 15;
+                  for (let i = 0; i < lengthOfId; i++) {
+                      const combinedChars = lowerLetters + upperLetters + numbers;
+                      const index = Math.floor(Math.random() * combinedChars.length);
+                      generatedID += combinedChars[index]
+                  }
+
+                  const data = {
+                      "id": generatedID,
+                      "name": getName,
+                      "gradingPolicy": {
+                          "summative": getSummativeWeight,
+                          "classwork": getClassworkWeight,
+                          "independent": getIndependentWeight
+                      },
+                      "teacher": user.user.uid,
+                      "students": finalStudentsArray
+                  }
+
+                  checkIfClassroomExists(data.id)
+                      .then((result) => {
+                          if (!result) {
+                              alert("Generating Classroom!")
+                              generateNewClassroom(data);
+                              window.location.reload();
+                          } else {
+                              alert("Classroom with this ID Already Exists. Please Try Again!")
+                          }
+                      });
+                  }
 
             } catch (error) {
                 alert(error);
