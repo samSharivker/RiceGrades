@@ -5,6 +5,8 @@ import { signOut } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { ref, set, child, get } from "firebase/database";
 import Swal from 'sweetalert2'
+import Toastify from 'toastify-js'
+import "toastify-js/src/toastify.css"
 
 const Teacher = (props) => {
     const [user] = useState(props);
@@ -14,6 +16,22 @@ const Teacher = (props) => {
             .then(() => console.log("Sign Out"))
             .catch((error) => console.log(error));
     };
+
+    function errorToast(msg) {
+      Toastify({
+
+        text: `Error: ${msg}`,
+        gravity: "bottom",
+        position: "right",
+        close: true,
+        duration: 30000,
+        style: {
+          background: "red",
+          borderRadius: "10px"
+        }
+
+      }).showToast();
+    }
 
     function getClassrooms() {
         return new Promise((resolve, reject) => {
@@ -102,7 +120,7 @@ const Teacher = (props) => {
       input.forEach((i) => {
         const a = i.split("");
         if(!a.includes("@") || a.length < 2) {
-          alert("Students were not added in the correct format. Please read the directions and try again!");
+          errorToast("Students were not added in the correct format. Please read the directions and try again!");
           return;
         }
       })
@@ -112,10 +130,10 @@ const Teacher = (props) => {
         getStudents(i)
         .then((result) => {
           if(result === null) {
-            alert(`${i} does not have an account. Please have the student register first!`);
+            errorToast(`${i} does not have an account. Please have the student register first!`);
             return;
           } else if(classroom.students.includes(i)) {
-            alert("This student is already in your classroom!");
+            errorToast("This student is already in your classroom!");
             return;
           } else {
             alert("Done!")
@@ -242,11 +260,11 @@ const Teacher = (props) => {
         const getStudentsPrompt = prompt("Add students in the format of: \nStudent1 Account Email, Student 2 Account Email. \nFor example: 'test@gmail.com, jdoe@gmail.com'\n");
 
         if (!getName || !getStudentsPrompt || !getSummativeWeight || !getClassworkWeight || !getIndependentWeight) {
-            alert("Must fill out all prompts correctly!");
+            errorToast("Must fill out all prompts correctly!");
             return;
         } else {
             if ((getSummativeWeight + getClassworkWeight + getIndependentWeight) !== 100) {
-                alert("Grade Weights must add up to 100!");
+                errorToast("Grade Weights must add up to 100!");
                 return
             }
 
@@ -278,7 +296,7 @@ const Teacher = (props) => {
                     if(result === null) {
                       const index = finalStudentsArray.indexOf(i);
                       finalStudentsArray.splice(index, 1);
-                      alert(`${i} does not have an account. Please have the student register first!`);
+                      errorToast(`${i} does not have an account. Please have the student register first!`);
                     }
                   })
                 })
@@ -314,13 +332,14 @@ const Teacher = (props) => {
                               generateNewClassroom(data);
                               window.location.reload();
                           } else {
-                              alert("Classroom with this ID Already Exists. Please Try Again!")
+                              errorToast("Classroom with this ID Already Exists. Please Try Again!");
                           }
                       });
                   }
 
             } catch (error) {
-                alert(error);
+                const theError = error.message;
+                errorToast(theError.replace("Error:", ""));
             }
         }
     }
