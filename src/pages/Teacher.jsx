@@ -112,46 +112,47 @@ const Teacher = (props) => {
 
 
     function addStudent(classroom) {
-      const rawInput = prompt("Add students in the format of: \nStudent1 Account Email, Student 2 Account Email. \nFor example: 'test@gmail.com, jdoe@gmail.com'\n");
+      const rawInput = prompt("Add students in the format of: \nStudent1 Account Email, Student 2 Account Email. \nFor example: 'jdoe@test.com, testing@yahoo.com\n");
 
-      const cleanInput = rawInput.replace(/\s/g, '');
-      const input = cleanInput.split(",");
+      if(rawInput) {
+        const cleanInput = rawInput.replace(/\s/g, '');
+        const input = cleanInput.split(",");
 
-      input.forEach((i) => {
-        const a = i.split("");
-        if(!a.includes("@") || a.length < 2) {
-          errorToast("Students were not added in the correct format. Please read the directions and try again!");
-          return;
-        }
-      })
-
-
-      input.forEach((i) => {
-        getStudents(i)
-        .then((result) => {
-          if(result === null) {
-            errorToast(`${i} does not have an account. Please have the student register first!`);
+        input.forEach((i) => {
+          const a = i.split("");
+          if(!a.includes("@") || a.length < 2) {
+            errorToast("Students were not added in the correct format. Please read the directions and try again!");
             return;
-          } else if(classroom.students.includes(i)) {
-            errorToast("This student is already in your classroom!");
-            return;
-          } else {
-            alert("Done!")
-            const dbRef = ref(db);
-            get(child(dbRef, 'classrooms/' + classroom.id)).then((snapshot) => {
-              if(snapshot.exists()) {
-                let array = snapshot.val().students;
-                input.forEach((i) => {
-                  array.push(i)
-                })
-                set(ref(db, 'classrooms/' + classroom.id + '/students'), array)
-                window.location.reload();
-              }
-            })
           }
         })
-      })
 
+
+        input.forEach((i) => {
+          getStudents(i)
+          .then((result) => {
+            if(result === null) {
+              errorToast(`${i} does not have an account. Please have the student register first!`);
+              return;
+            } else if(classroom.students.includes(i)) {
+              errorToast("This student is already in your classroom!");
+              return;
+            } else {
+              alert("Done!")
+              const dbRef = ref(db);
+              get(child(dbRef, 'classrooms/' + classroom.id)).then((snapshot) => {
+                if(snapshot.exists()) {
+                  let array = snapshot.val().students;
+                  input.forEach((i) => {
+                    array.push(i)
+                  })
+                  set(ref(db, 'classrooms/' + classroom.id + '/students'), array)
+                  window.location.reload();
+                }
+              })
+            }
+          })
+        })
+      }
     }
 
     function displayClassroom(classroom) {
@@ -173,10 +174,11 @@ const Teacher = (props) => {
 
         const b = document.createElement("p");
         b.innerHTML = `Number of Students: ${classroom.students.length}`;
+        b.classList.add("student-count-display")
 
         const viewStudentsButton = document.createElement("button");
         viewStudentsButton.classList.add("view-students-button")
-        viewStudentsButton.innerHTML = "Students";
+        viewStudentsButton.innerHTML = "Edit Students";
 
         const addStudentsButton = document.createElement("button");
         addStudentsButton.classList.add("add-students-button");
@@ -257,7 +259,7 @@ const Teacher = (props) => {
         const getSummativeWeight = parseInt(prompt("What percentage of a student's grade should Summative Assessments Count for?\n For example if you want it to be 50% of a students grade you would enter: '50'\n"));
         const getClassworkWeight = parseInt(prompt("What percentage of a student's grade should Classwork Count for?\n For example if you want it to be 40% of a students grade you would enter: '40'\n"));
         const getIndependentWeight = parseInt(prompt("What percentage of a student's grade should Independent Work Count for?\n For example if you want it to be 10% of a students grade you would enter: '10'\n"));
-        const getStudentsPrompt = prompt("Add students in the format of: \nStudent1 Account Email, Student 2 Account Email. \nFor example: 'test@gmail.com, jdoe@gmail.com'\n");
+        const getStudentsPrompt = prompt("Add students in the format of: \nStudent1 Account Email, Student 2 Account Email. \nFor example: 'jdoe@test.com, testing@yahoo.com\n");
 
         if (!getName || !getStudentsPrompt || !getSummativeWeight || !getClassworkWeight || !getIndependentWeight) {
             errorToast("Must fill out all prompts correctly!");
@@ -301,7 +303,7 @@ const Teacher = (props) => {
                   })
                 })
 
-                if(finalStudentsArray.length > 1) {
+                if(finalStudentsArray.length > 0) {
                   const lowerLetters = "abcdefghijklmnopqrstuvwxyz";
                   const upperLetters = lowerLetters.toUpperCase();
                   const numbers = "1234567890";
