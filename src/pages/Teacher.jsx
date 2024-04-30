@@ -3,7 +3,7 @@ import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../firebase';
-import { ref, set, child, get, update } from "firebase/database";
+import { ref, set, child, get, update, remove } from "firebase/database";
 import Swal from 'sweetalert2';
 import Toastify from 'toastify-js';
 import "toastify-js/src/toastify.css";
@@ -127,7 +127,14 @@ const Teacher = (props) => {
           });
       });
   }
+      function deleteClassroom(classroomID) {
+        return new Promise((resolve, reject) => {
+            const dbRef = ref(db);
+            const classroomRef = child(dbRef, 'classrooms/' + classroomID);
 
+            remove(classroomRef);
+        });
+    }
 
     //classroom, email to remove
     function removeFromClassroom(a, b) {
@@ -233,6 +240,10 @@ const Teacher = (props) => {
         gradesButton.classList.add("view-grades-button");
         gradesButton.innerHTML = "Edit Grades";
 
+        const deleteClassroomButton = document.createElement("button");
+        deleteClassroomButton.classList.add("classroom-delete-button");
+        deleteClassroomButton.innerHTML = "Delete Classroom";
+
         const viewStudentsButton = document.createElement("button");
         viewStudentsButton.classList.add("view-students-button");
         viewStudentsButton.innerHTML = "Edit Students";
@@ -243,6 +254,7 @@ const Teacher = (props) => {
 
         classroomButtonWrapper.appendChild(viewStudentsButton);
         classroomButtonWrapper.appendChild(gradesButton);
+        classroomButtonWrapper.appendChild(deleteClassroomButton);
 
         const addStudentsButton = document.createElement("button");
         addStudentsButton.classList.add("add-students-button");
@@ -255,6 +267,22 @@ const Teacher = (props) => {
         addStudentsButton.addEventListener("click", () => {
           addStudent(classroom);
         });
+
+        deleteClassroomButton.addEventListener("click", () => {
+          Swal.fire({
+            title: `Are you sure you want to delete ${classroom.name}? This action cannot be reversed! This will delete all grades and assignments associated with this classroom.`,
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: "Delete",
+            denyButtonText: `Don't Delete`
+          }).then((result) => {
+            if (result.isConfirmed) {
+              deleteClassroom(classroom.id);
+              Swal.fire("Deleted!", "", "success");
+              window.location.reload();
+            }
+          });
+        })
 
         viewStudentsButton.addEventListener("click", () => {
           if(document.querySelector('.deez') === null) {
