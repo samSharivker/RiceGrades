@@ -42,7 +42,7 @@ const Teacher = (props) => {
                 if (snapshot.exists()) {
                     const data = snapshot.val();
                     for (let key in data) {
-                        if (data[key].teacher === user.user.uid) {
+                        if (data[key].teacher === user.user.email) {
                             displayClassroom(data[key]);
                         }
                     }
@@ -462,7 +462,7 @@ const Teacher = (props) => {
                           "classwork": getClassworkWeight,
                           "independent": getIndependentWeight
                       },
-                      "teacher": user.user.uid,
+                      "teacher": user.user.email,
                       "students": finalStudentsArray,
                       "grades": grades
                   }

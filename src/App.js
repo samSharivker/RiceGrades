@@ -44,7 +44,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="/developers" element={<Developers />} />
           <Route path="/changelog" element={<ChangeLog />} />
-          <Route path="/student" element={<ProtectedRoute user={user}><Student /></ProtectedRoute>} />
+          <Route path="/student" element={<ProtectedRoute user={user}><Student user={user}/></ProtectedRoute>} />
           <Route path="/teacher" element={<ProtectedRoute user={user}><Teacher user={user}/></ProtectedRoute>} />
           <Route path="/support" element={<Support />} />
           <Route path="/login" element={<Login user={user}/>} />
