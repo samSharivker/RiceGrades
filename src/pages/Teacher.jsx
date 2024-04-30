@@ -3,10 +3,12 @@ import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../firebase';
-import { ref, set, child, get } from "firebase/database";
-import Swal from 'sweetalert2'
-import Toastify from 'toastify-js'
-import "toastify-js/src/toastify.css"
+import { ref, set, child, get, update } from "firebase/database";
+import Swal from 'sweetalert2';
+import Toastify from 'toastify-js';
+import "toastify-js/src/toastify.css";
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
 
 const Teacher = (props) => {
     const [user] = useState(props);
@@ -78,6 +80,54 @@ const Teacher = (props) => {
         })
       })
     }
+
+    function getStudentGrade(classroomID, target) {
+      return new Promise((resolve, reject) => {
+        const dbRef = ref(db);
+        get(child(dbRef, 'classrooms/' + classroomID + '/grades')).then((snapshot) => {
+          if(snapshot.exists()) {
+            const data = snapshot.val();
+            for(let key in data) {
+              if(data[key].student === target) {
+                resolve(data[key].grade);
+                return;
+              }
+            }
+          } else {
+            resolve(null);
+          }
+        }).catch((error) => {
+          console.log(error);
+          reject(error);
+        })
+      })
+    }
+
+    function updateStudentGrade(classroomID, target, grade) {
+      return new Promise((resolve, reject)  => {
+          const dbRef = ref(db);
+          const gradesRef = child(dbRef, 'classrooms/' + classroomID + '/grades');
+          get(gradesRef).then((snapshot) => {
+              if(snapshot.exists()) {
+                  const grades = snapshot.val();
+                  for (const studentID in grades) {
+                      if (grades.hasOwnProperty(studentID)) {
+                          const student = grades[studentID];
+                          if (student.student === target) {
+                              student.grade = grade;
+                              update(child(gradesRef, studentID), student)
+                              return;
+                          }
+                      }
+                  }
+              } else {
+              }
+          }).catch((error) => {
+              reject("Error:" + error.message);
+          });
+      });
+  }
+
 
     //classroom, email to remove
     function removeFromClassroom(a, b) {
@@ -176,9 +226,19 @@ const Teacher = (props) => {
         b.innerHTML = `Number of Students: ${classroom.students.length}`;
         b.classList.add("student-count-display")
 
+        const classroomButtonWrapper = document.createElement("div");
+        classroomButtonWrapper.classList.add("classroom-button-wrapper");
+
+        const gradesButton = document.createElement("button");
+        gradesButton.classList.add("view-grades-button");
+        gradesButton.innerHTML = "Edit Grades";
+
         const viewStudentsButton = document.createElement("button");
-        viewStudentsButton.classList.add("view-students-button")
+        viewStudentsButton.classList.add("view-students-button");
         viewStudentsButton.innerHTML = "Edit Students";
+
+        classroomButtonWrapper.appendChild(viewStudentsButton);
+        classroomButtonWrapper.appendChild(gradesButton);
 
         const addStudentsButton = document.createElement("button");
         addStudentsButton.classList.add("add-students-button");
@@ -226,9 +286,45 @@ const Teacher = (props) => {
           }
       })
 
+      gradesButton.addEventListener("click", () => {
+        if(document.querySelector('.deez') === null) {
+            classroom.students.forEach((i) => {
+                const student = document.createElement("p");
+                student.innerHTML = i;
+                student.classList.add("deez");
+                student.setAttribute('id', i.replace(/[.@]/g, ""));
+                studentWrapper.appendChild(student);
+                getStudentGrade(classroom.id, student.innerHTML)
+                .then((result) => {
+                  tippy(`#${i.replace(/[.@]/g, "")}`, {
+                    content: result,
+                    placement: 'right'
+                  })
+                })
+                student.addEventListener("click", () => {
+                  const getNewGrade = parseInt(prompt("What do you want to change the student's grade to?\n"));
+                  console.log(getNewGrade);
+                  if(isNaN(getNewGrade)) {
+                    errorToast("Must input a number!");
+                    return;
+                  } else {
+                    updateStudentGrade(classroom.id, student.innerHTML, getNewGrade);
+                    window.location.reload();
+                  }
+                })
+            })
+        } else {
+          const temp = document.querySelectorAll('.deez');
+          temp.forEach((i) => {
+            i.remove();
+          })
+          addStudentsButton.remove();
+        }
+    })
+
         classWrapper.appendChild(a);
         classWrapper.appendChild(b);
-        classWrapper.appendChild(viewStudentsButton);
+        classWrapper.appendChild(classroomButtonWrapper);
         classWrapper.appendChild(studentWrapper)
         classroomWrapper.appendChild(classWrapper);
     }
@@ -315,6 +411,11 @@ const Teacher = (props) => {
                       generatedID += combinedChars[index]
                   }
 
+                  let grades = [];
+                  finalStudentsArray.forEach((i) => {
+                    grades.push({"student": i, "grade": 100})
+                  });
+
                   const data = {
                       "id": generatedID,
                       "name": getName,
@@ -324,7 +425,8 @@ const Teacher = (props) => {
                           "independent": getIndependentWeight
                       },
                       "teacher": user.user.uid,
-                      "students": finalStudentsArray
+                      "students": finalStudentsArray,
+                      "grades": grades
                   }
 
                   checkIfClassroomExists(data.id)

@@ -30,11 +30,7 @@ export default class Student extends React.Component {
       };
       return (
         <div>
-            <nav>
-                <div className="logo">
-                    <a href="/#">Rice Grades</a>
-                </div>
-            </nav>
+            <Nav />
             <Grades grade={grading} />
             <button onClick={handleSignOut}>Sign Out</button>
             <Footer />

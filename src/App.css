@@ -536,3 +536,14 @@ svg {
 .classroom .deez:hover {
     color: red;
 }
+
+.classroom .classroom-button-wrapper {
+    display: flex;
+    gap: 5rem;
+    justify-content: center;
+    align-items: space-around;
+}
+
+.classroom .student-grade-item:hover {
+    color: lime;
+}
