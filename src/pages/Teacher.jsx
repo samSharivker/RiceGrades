@@ -237,12 +237,20 @@ const Teacher = (props) => {
         viewStudentsButton.classList.add("view-students-button");
         viewStudentsButton.innerHTML = "Edit Students";
 
+        const refreshButton = document.createElement("button");
+        refreshButton.classList.add("refresh-students-button");
+        refreshButton.innerHTML = "Refresh View";
+
         classroomButtonWrapper.appendChild(viewStudentsButton);
         classroomButtonWrapper.appendChild(gradesButton);
 
         const addStudentsButton = document.createElement("button");
         addStudentsButton.classList.add("add-students-button");
         addStudentsButton.innerHTML = "Add Students";
+
+        refreshButton.addEventListener("click", () => {
+          window.location.reload();
+        })
 
         addStudentsButton.addEventListener("click", () => {
           addStudent(classroom);
@@ -283,11 +291,13 @@ const Teacher = (props) => {
               i.remove();
             })
             addStudentsButton.remove();
+            refreshButton.remove();
           }
       })
 
       gradesButton.addEventListener("click", () => {
         if(document.querySelector('.deez') === null) {
+            studentWrapper.appendChild(refreshButton);
             classroom.students.forEach((i) => {
                 const student = document.createElement("p");
                 student.innerHTML = i;
@@ -309,7 +319,6 @@ const Teacher = (props) => {
                     return;
                   } else {
                     updateStudentGrade(classroom.id, student.innerHTML, getNewGrade);
-                    window.location.reload();
                   }
                 })
             })
@@ -319,6 +328,7 @@ const Teacher = (props) => {
             i.remove();
           })
           addStudentsButton.remove();
+          refreshButton.remove();
         }
     })
 
