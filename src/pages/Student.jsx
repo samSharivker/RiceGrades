@@ -31,14 +31,16 @@ const Student = (props) => {
       classTeacher.innerHTML = `Teacher: ${classroom.teacher}`;
 
       const classGrade = document.createElement("p");
-      classGrade.innerHTML = grade;
+      classGrade.innerHTML = `Grade: ${grade}`;
 
 
       classInfoWrapper.appendChild(className);
       classInfoWrapper.appendChild(classTeacher);
       classInfoWrapper.appendChild(classGrade);
 
-      document.querySelector(".class-list").appendChild(classInfoWrapper);
+      b.appendChild(classInfoWrapper);
+
+      document.querySelector(".class-list").appendChild(b);
     }
   }
 

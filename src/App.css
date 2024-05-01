@@ -547,3 +547,29 @@ svg {
 .classroom .student-grade-item:hover {
     color: lime;
 }
+
+.class-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem 0rem;
+}
+
+.class-list li {
+    max-width: 35rem;
+    list-style: none;
+    background-color: gray;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    border-radius: 5px;
+}
+
+.class-list h {
+    font-size: 5rem;
+}
+
+.class-list p {
+    font-size: 1.2rem;
+}
