@@ -45,7 +45,6 @@ export default function Login({ user }) {
                     const result = snapshot.val().role;
                     resolve(result);
                 } else {
-                    console.log("No data available");
                     resolve(null); // Resolve with null if no data is available
                 }
             }).catch((error) => {
@@ -85,38 +84,28 @@ export default function Login({ user }) {
                 // Signed up
                 const user = userCredential.user;
                 writeData(firstName, lastName, email, roles[role], user.uid)
-                // ...
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                // console.log(errorCode, errorMessage)
                 alert(errorMessage);
-                // ..
             });
         }
     }
     // function for user to login
     const handleSignIn = (event) => {
         event.preventDefault();
-        // if(roles[role] == undefined) {
-        //     alert("Must Pick a Role!")
-        //     return
-        // }
         if(!email || !password) return;
             signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 // Signed up
                 const user = userCredential.user;
                 console.log(user)
-                // ...
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                //console.log(errorCode, errorMessage)
                 alert(errorMessage)
-                // ..
             });
     }
 

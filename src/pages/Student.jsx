@@ -19,11 +19,16 @@ const Student = (props) => {
       a.innerHTML = "Not part of any classes";
       document.querySelector('.student-class-wrapper').appendChild(a);
     } else {
+      //runs if student is in at least 1 classroom
       const b = document.createElement("li");
-      // b.innerHTML = classroom.name;
       const classInfoWrapper = document.createElement("div");
+      /*
+      All the classroom display elements will first get appended to the class-info-wrapper
+      Then that wrapper will get appended to the li element and will then join a ul of all the classrooms the user is part of
+      */
       classInfoWrapper.classList.add("class-info-wrapper");
 
+      //creating and displaying classroom information
       const className = document.createElement("h");
       className.innerHTML = classroom.name;
 
@@ -33,13 +38,15 @@ const Student = (props) => {
       const classGrade = document.createElement("p");
       classGrade.innerHTML = `Grade: ${grade}`;
 
-
+      //all display elements first being added to the wrapper
       classInfoWrapper.appendChild(className);
       classInfoWrapper.appendChild(classTeacher);
       classInfoWrapper.appendChild(classGrade);
 
+      //wrapper is then being added to the li
       b.appendChild(classInfoWrapper);
 
+      //then the li joins the overall classroom list
       document.querySelector(".class-list").appendChild(b);
     }
   }
@@ -52,11 +59,14 @@ const Student = (props) => {
                   const data = snapshot.val();
                   for (let key in data) {
                     const students = data[key].students;
+                    /*
+                    Iterates through classrooms in database to see if their students array contain the current authenticated student.
+                    If they are in the array then that means that a teacher had to have added them to that classroom.
+                    */
                     if(students.includes(user.user.email)) {
                       data[key].grades.forEach((i) => {
                         if(i.student === user.user.email) {
-                          displayClassroom(data[key], i.grade)
-                          console.log(`You are part of ${data[key].name} taught by ${data[key].teacher}. Your grade is ${i.grade}`);
+                          displayClassroom(data[key], i.grade) //classroom data and student grade
                         }
                       })
                     }
@@ -71,7 +81,7 @@ const Student = (props) => {
       });
   }
 
-  getClassrooms()
+  getClassrooms() //runs on page load
 
   return (
     <div>

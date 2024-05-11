@@ -19,6 +19,11 @@ const Teacher = (props) => {
             .catch((error) => console.log(error));
     };
 
+    /*
+    Needs to be turned into a component eventually
+    This is just a more clean way to display error messages to the user so try to use this instead of just an alert
+    https://github.com/apvarun/toastify-js/blob/master/README.md
+    */
     function errorToast(msg) {
       Toastify({
 
@@ -42,6 +47,10 @@ const Teacher = (props) => {
                 if (snapshot.exists()) {
                     const data = snapshot.val();
                     for (let key in data) {
+                        /*
+                        Iterates through all classrooms in the database to see if the teacher's email matches the current authenticated user's email
+                        If the email is same as user email then the user must be the teacher so it will be displayed
+                        */
                         if (data[key].teacher === user.user.email) {
                             displayClassroom(data[key]);
                         }
@@ -56,7 +65,7 @@ const Teacher = (props) => {
         });
     }
 
-    getClassrooms()
+    getClassrooms() //runs on page load
 
     function getStudents(target) {
       return new Promise((resolve, reject) => {
@@ -383,23 +392,26 @@ const Teacher = (props) => {
         });
     }
 
+    //data arg is a json object of the classroom attributes
     function generateNewClassroom(data) {
         const reference = ref(db, 'classrooms/' + data.id);
         set(reference, data)
     }
 
     function createClassroom() {
+
+        //get user input for classroom attributes
         const getName = prompt("Classroom Name:\n");
         const getSummativeWeight = parseInt(prompt("What percentage of a student's grade should Summative Assessments Count for?\n For example if you want it to be 50% of a students grade you would enter: '50'\n"));
         const getClassworkWeight = parseInt(prompt("What percentage of a student's grade should Classwork Count for?\n For example if you want it to be 40% of a students grade you would enter: '40'\n"));
         const getIndependentWeight = parseInt(prompt("What percentage of a student's grade should Independent Work Count for?\n For example if you want it to be 10% of a students grade you would enter: '10'\n"));
         const getStudentsPrompt = prompt("Add students in the format of: \nStudent1 Account Email, Student 2 Account Email. \nFor example: 'jdoe@test.com, testing@yahoo.com\n");
 
-        if (!getName || !getStudentsPrompt || !getSummativeWeight || !getClassworkWeight || !getIndependentWeight) {
+        if (!getName || !getStudentsPrompt || !getSummativeWeight || !getClassworkWeight || !getIndependentWeight) { //error handling
             errorToast("Must fill out all prompts correctly!");
             return;
         } else {
-            if ((getSummativeWeight + getClassworkWeight + getIndependentWeight) !== 100) {
+            if ((getSummativeWeight + getClassworkWeight + getIndependentWeight) !== 100) { //error handling
                 errorToast("Grade Weights must add up to 100!");
                 return
             }
@@ -411,7 +423,7 @@ const Teacher = (props) => {
                 getStudentsArray.forEach((i) => {
                     const a = i.split("");
                     if (!a.includes("@") || a.length < 2) {
-                        throw new Error("Students were not added in the correct format. Please read the directions and try again!");
+                        throw new Error("Students were not added in the correct format. Please read the directions and try again!"); //error handling
                     }
                 })
 
@@ -427,22 +439,25 @@ const Teacher = (props) => {
                 });
 
                 finalStudentsArray.forEach((i) => {
+                  //checking to see if the student email is in users database to prevent random email from getting added
                   getStudents(i)
                   .then((result) => {
                     if(result === null) {
+                      //removes student from the classroom list if not in database
                       const index = finalStudentsArray.indexOf(i);
                       finalStudentsArray.splice(index, 1);
-                      errorToast(`${i} does not have an account. Please have the student register first!`);
+                      errorToast(`${i} does not have an account. Please have the student register first!`); //error handling
                     }
                   })
                 })
 
-                if(finalStudentsArray.length > 0) {
+                if(finalStudentsArray.length > 0) { // > 0 to prevent creating a classroom with no students
                   const lowerLetters = "abcdefghijklmnopqrstuvwxyz";
                   const upperLetters = lowerLetters.toUpperCase();
                   const numbers = "1234567890";
                   let generatedID = "";
                   let lengthOfId = 15;
+                  //generating a classroomID
                   for (let i = 0; i < lengthOfId; i++) {
                       const combinedChars = lowerLetters + upperLetters + numbers;
                       const index = Math.floor(Math.random() * combinedChars.length);
@@ -451,7 +466,7 @@ const Teacher = (props) => {
 
                   let grades = [];
                   finalStudentsArray.forEach((i) => {
-                    grades.push({"student": i, "grade": 100})
+                    grades.push({"student": i, "grade": 100}) //by default gives kids 100
                   });
 
                   const data = {
@@ -467,7 +482,7 @@ const Teacher = (props) => {
                       "grades": grades
                   }
 
-                  checkIfClassroomExists(data.id)
+                  checkIfClassroomExists(data.id) //prevents the very rare chance that classroom with that ID already exists
                       .then((result) => {
                           if (!result) {
                               alert("Generating Classroom!")
