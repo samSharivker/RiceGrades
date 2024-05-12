@@ -184,6 +184,7 @@ const Teacher = (props) => {
         const cleanInput = rawInput.replace(/\s/g, '');
         const input = cleanInput.split(",");
 
+        //error handling
         input.forEach((i) => {
           const a = i.split("");
           if(!a.includes("@") || a.length < 2) {
@@ -194,6 +195,7 @@ const Teacher = (props) => {
 
 
         input.forEach((i) => {
+          //checking that added students exist in the database
           getStudents(i)
           .then((result) => {
             if(result === null) {
@@ -205,6 +207,7 @@ const Teacher = (props) => {
             } else {
               alert("Done!")
               const dbRef = ref(db);
+              //updating students array in classroom object of database
               get(child(dbRef, 'classrooms/' + classroom.id)).then((snapshot) => {
                 if(snapshot.exists()) {
                   let array = snapshot.val().students;
@@ -222,6 +225,7 @@ const Teacher = (props) => {
     }
 
     function displayClassroom(classroom) {
+        //check student page for explaintation on the wrappers
         const classroomWrapper = document.querySelector('.classroom-wrapper');
         const classWrapper = document.createElement("div");
         classWrapper.classList.add("classroom");
@@ -269,14 +273,17 @@ const Teacher = (props) => {
         addStudentsButton.classList.add("add-students-button");
         addStudentsButton.innerHTML = "Add Students";
 
+        //refreshes page by reloading page
         refreshButton.addEventListener("click", () => {
           window.location.reload();
         })
 
+        //add student function
         addStudentsButton.addEventListener("click", () => {
           addStudent(classroom);
         });
 
+        //delete classroom function
         deleteClassroomButton.addEventListener("click", () => {
           Swal.fire({
             title: `Are you sure you want to delete ${classroom.name}? This action cannot be reversed! This will delete all grades and assignments associated with this classroom.`,
@@ -285,7 +292,7 @@ const Teacher = (props) => {
             confirmButtonText: "Delete",
             denyButtonText: `Don't Delete`
           }).then((result) => {
-            if (result.isConfirmed) {
+            if (result.isConfirmed) { //if user confirms they want to delete the classroom
               deleteClassroom(classroom.id);
               Swal.fire("Deleted!", "", "success");
               window.location.reload();
@@ -294,7 +301,7 @@ const Teacher = (props) => {
         })
 
         viewStudentsButton.addEventListener("click", () => {
-          if(document.querySelector('.deez') === null) {
+          if(document.querySelector('.deez') === null) { //if dropdown currently closed
               studentWrapper.appendChild(addStudentsButton);
               classroom.students.forEach((i) => {
                   const student = document.createElement("p");
@@ -302,7 +309,7 @@ const Teacher = (props) => {
                   student.classList.add("deez");
                   studentWrapper.appendChild(student);
                   if(classroom.students.length > 1) {
-                    student.addEventListener("click", () => {
+                    student.addEventListener("click", () => { //make it so that if you click the student they can be deleted by using innerHTML as reference
                       getStudents(student.innerHTML)
                       .then((result) => {
                         Swal.fire({
@@ -323,6 +330,7 @@ const Teacher = (props) => {
                   }
               })
           } else {
+            //handle close dropdown
             const temp = document.querySelectorAll('.deez');
             temp.forEach((i) => {
               i.remove();
@@ -332,16 +340,17 @@ const Teacher = (props) => {
           }
       })
 
+      //view and update grades
       gradesButton.addEventListener("click", () => {
-        if(document.querySelector('.deez') === null) {
+        if(document.querySelector('.deez') === null) { //if dropdown currently closed
             studentWrapper.appendChild(refreshButton);
             classroom.students.forEach((i) => {
                 const student = document.createElement("p");
                 student.innerHTML = i;
                 student.classList.add("deez");
-                student.setAttribute('id', i.replace(/[.@]/g, ""));
+                student.setAttribute('id', i.replace(/[.@]/g, "")); //create students with p element and give them id based on their email
                 studentWrapper.appendChild(student);
-                getStudentGrade(classroom.id, student.innerHTML)
+                getStudentGrade(classroom.id, student.innerHTML) //create tooltip for each p eleemtn with the student's greade
                 .then((result) => {
                   tippy(`#${i.replace(/[.@]/g, "")}`, {
                     content: result,
@@ -352,14 +361,15 @@ const Teacher = (props) => {
                   const getNewGrade = parseInt(prompt("What do you want to change the student's grade to?\n"));
                   console.log(getNewGrade);
                   if(isNaN(getNewGrade)) {
-                    errorToast("Must input a number!");
+                    errorToast("Must input a number!"); //error handle
                     return;
                   } else {
-                    updateStudentGrade(classroom.id, student.innerHTML, getNewGrade);
+                    updateStudentGrade(classroom.id, student.innerHTML, getNewGrade); //update student grade
                   }
                 })
             })
         } else {
+          //handle close dropdown
           const temp = document.querySelectorAll('.deez');
           temp.forEach((i) => {
             i.remove();
