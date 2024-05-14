@@ -249,9 +249,9 @@ const Teacher = (props) => {
         const classroomButtonWrapper = document.createElement("div");
         classroomButtonWrapper.classList.add("classroom-button-wrapper");
 
-        const gradesButton = document.createElement("button");
-        gradesButton.classList.add("view-grades-button");
-        gradesButton.innerHTML = "Edit Grades";
+        const addAssignmentButton = document.createElement("button");
+        addAssignmentButton.classList.add("view-grades-button");
+        addAssignmentButton.innerHTML = "Add Assignment";
 
         const deleteClassroomButton = document.createElement("button");
         deleteClassroomButton.classList.add("classroom-delete-button");
@@ -266,7 +266,7 @@ const Teacher = (props) => {
         refreshButton.innerHTML = "Refresh View";
 
         classroomButtonWrapper.appendChild(viewStudentsButton);
-        classroomButtonWrapper.appendChild(gradesButton);
+        classroomButtonWrapper.appendChild(addAssignmentButton);
         classroomButtonWrapper.appendChild(deleteClassroomButton);
 
         const addStudentsButton = document.createElement("button");
@@ -335,22 +335,36 @@ const Teacher = (props) => {
             temp.forEach((i) => {
               i.remove();
             })
+            if(document.querySelector(".assignmentForm") !== null){
+              document.querySelector(".assignmentForm").remove()
+            }
             addStudentsButton.remove();
             refreshButton.remove();
           }
       })
 
       //view and update grades
-      gradesButton.addEventListener("click", () => {
+      addAssignmentButton.addEventListener("click", () => {
         if(document.querySelector('.deez') === null) { //if dropdown currently closed
-            studentWrapper.appendChild(refreshButton);
+          addAssignmentButton.innerHTML = "Cancel"
+
+          var name;
+          var grade;
+          const assignment = document.createElement("form");
+          assignment.classList.add("assignmentForm")
+          assignment.innerHTML = `<input id="Name" type="text" placeholder="Assignment Name?"><input id="Grade" type="text" placeholder="Total grade points"><input id="Type" type="text" placeholder="Assignment Type?"><button>Create Assignment</button>`;
+
+          studentWrapper.appendChild(assignment);
+
+
+            studentWrapper.appendChild(refreshButton); // refresh view button
             classroom.students.forEach((i) => {
                 const student = document.createElement("p");
                 student.innerHTML = i;
                 student.classList.add("deez");
                 student.setAttribute('id', i.replace(/[.@]/g, "")); //create students with p element and give them id based on their email
                 studentWrapper.appendChild(student);
-                getStudentGrade(classroom.id, student.innerHTML) //create tooltip for each p eleemtn with the student's greade
+                getStudentGrade(classroom.id, student.innerHTML) //create tooltip for each p element with the student's greade
                 .then((result) => {
                   tippy(`#${i.replace(/[.@]/g, "")}`, {
                     content: result,
@@ -374,6 +388,9 @@ const Teacher = (props) => {
           temp.forEach((i) => {
             i.remove();
           })
+          if(document.querySelector(".assignmentForm") !== null){
+            document.querySelector(".assignmentForm").remove()
+          }
           addStudentsButton.remove();
           refreshButton.remove();
         }
