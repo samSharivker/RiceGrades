@@ -98,7 +98,7 @@ const Teacher = (props) => {
             const data = snapshot.val();
             for(let key in data) {
               if(data[key].student === target) {
-                resolve(data[key].grade);
+                resolve(data[key].grade.overall);
                 return;
               }
             }
@@ -227,6 +227,8 @@ const Teacher = (props) => {
     function displayClassroom(classroom) {
         //check student page for explaintation on the wrappers
         const classroomWrapper = document.querySelector('.classroom-wrapper');
+        const assignmentsWrapper = document.createElement("div");
+        assignmentsWrapper.classList.add("assignments-wrapper");
         const classWrapper = document.createElement("div");
         classWrapper.classList.add("classroom");
 
@@ -251,7 +253,7 @@ const Teacher = (props) => {
 
         const addAssignmentButton = document.createElement("button");
         addAssignmentButton.classList.add("view-grades-button");
-        addAssignmentButton.innerHTML = "Add Assignment";
+        addAssignmentButton.innerHTML = "Assignments";
 
         const deleteClassroomButton = document.createElement("button");
         deleteClassroomButton.classList.add("classroom-delete-button");
@@ -346,8 +348,21 @@ const Teacher = (props) => {
       //view and update grades
       addAssignmentButton.addEventListener("click", () => {
         if(document.querySelector('.deez') === null) { //if dropdown currently closed
-          addAssignmentButton.innerHTML = "Cancel"
-
+          fetchAssignments(classroom.id)
+          .then((result) => {
+            if(result === null) {
+              console.log("no assignments");
+            } else {
+              result.forEach((i, count) => {
+                const assignmentP = document.createElement("p");
+                assignmentP.classList.add("assignment-item");
+                assignmentP.setAttribute("name", count + 1);
+                assignmentP.setAttribute("id", i.id);
+                assignmentP.innerHTML = `${count + 1}. ${i.name}`;
+                document.querySelector(".assignmentForm").appendChild(assignmentP);
+              })
+            }
+          })
           const assignment = document.createElement("form");
           assignment.onsubmit = function(event) {
             const a = document.querySelector("#assignment-name-form").value;
@@ -391,14 +406,33 @@ const Teacher = (props) => {
                   })
                 })
                 student.addEventListener("click", () => {
-                  const getNewGrade = parseInt(prompt("What do you want to change the student's grade to?\n"));
-                  console.log(getNewGrade);
-                  if(isNaN(getNewGrade)) {
-                    errorToast("Must input a number!"); //error handle
+                  // const getNewGrade = parseInt(prompt("What do you want to change the student's grade to?\n"));
+                  // console.log(getNewGrade);
+                  // if(isNaN(getNewGrade)) {
+                  //   errorToast("Must input a number!"); //error handle
+                  //   return;
+                  // } else {
+                  //   updateStudentGrade(classroom.id, student.innerHTML, getNewGrade); //update student grade
+                  // }
+                  const getAssignmentNumber = parseInt(prompt("Which assignment grade do you want to edit for the student? Please type the number that you see corrosponding in the assignment list above."));
+
+                  const getAssignment = document.querySelector(`.assignment-item[name="${getAssignmentNumber}"]`);
+                  if(getAssignment === null) {
+                    alert("This assignment does not exist");
                     return;
-                  } else {
-                    updateStudentGrade(classroom.id, student.innerHTML, getNewGrade); //update student grade
                   }
+
+                  const getAssignmentGrade = parseInt(prompt("What grade do you want the student to have for this assignment? They currently have a:\n[ex number] / [worth]"));
+
+                  if(isNaN(getAssignmentGrade)) {
+                    alert("Not a valid number!");
+                    return
+                  } else {
+                    // alert("Ok i will change this");
+                    updateAssignmentGradeDB(getAssignment.id, student.innerHTML, getAssignmentGrade)
+                    return;
+                  }
+
                 })
             })
         } else {
@@ -415,8 +449,9 @@ const Teacher = (props) => {
         }
     })
 
-        classWrapper.appendChild(a);
-        classWrapper.appendChild(b);
+        assignmentsWrapper.appendChild(a);
+        assignmentsWrapper.appendChild(b);
+        classWrapper.appendChild(assignmentsWrapper);
         classWrapper.appendChild(classroomButtonWrapper);
         classWrapper.appendChild(studentWrapper)
         classroomWrapper.appendChild(classWrapper);
@@ -512,7 +547,7 @@ const Teacher = (props) => {
 
                   let grades = [];
                   finalStudentsArray.forEach((i) => {
-                    grades.push({"student": i, "grade": 100}) //by default gives kids 100
+                    grades.push({"student": i, "grade": {"summative": 100, "classwork": 100, "independent": 100, "overall": 100}}) //by default gives kids 100
                   });
 
                   const data = {
@@ -571,9 +606,73 @@ const Teacher = (props) => {
         "type": type,
         "classroomID": classroomID,
         "grades": grades,
+        "assignmentID": generatedID
       }
       set(reference, data);
 
+    }
+
+    function fetchAssignments(classroomID) {
+      return new Promise((resolve, reject) => {
+        const dbRef = ref(db);
+        get(child(dbRef, 'assignments/')).then((snapshot) => {
+          if(snapshot.exists()) {
+            const data = snapshot.val();
+            let output = [];
+            for(let key in data) {
+              if(data[key].classroomID === classroomID) {
+                const info = {
+                  "name": data[key].name,
+                  "type": data[key].type,
+                  "worth": data[key].worth,
+                  "grades": data[key].grades,
+                  "id": data[key].assignmentID
+                }
+                output.push(info);
+              }
+            }
+            resolve(output)
+          } else {
+            resolve(null);
+          }
+        }).catch((error) => {
+          console.log(error);
+          reject(error);
+        })
+      })
+    }
+
+    function updateAssignmentGradeDB(assignmentID, student, newGrade) {
+      return new Promise((resolve, reject) => {
+        const dbRef = ref(db);
+        const gradesRef = child(dbRef, 'assignments/' + assignmentID + '/grades');
+        get(gradesRef).then((snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+            for (let key in data) {
+              if (data[key].student === student) {
+                // Update the grade
+                data[key].grade = newGrade;
+                // Update the database
+                const updateData = {};
+                updateData['assignments/' + assignmentID + '/grades/' + key + '/grade'] = newGrade;
+                update(dbRef, updateData)
+                  .then(() => {
+                    resolve(); // Resolve the promise once update is successful
+                  })
+                  .catch((error) => {
+                    reject(error); // Reject the promise if there's an error
+                  });
+                return;
+              }
+            }
+          }
+          // If student's grade not found
+          reject(new Error("Student's grade not found for the given assignment ID"));
+        }).catch((error) => {
+          reject(error); // Reject the promise if there's an error
+        });
+      });
     }
 
     return (
