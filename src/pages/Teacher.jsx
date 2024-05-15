@@ -348,11 +348,30 @@ const Teacher = (props) => {
         if(document.querySelector('.deez') === null) { //if dropdown currently closed
           addAssignmentButton.innerHTML = "Cancel"
 
-          var name;
-          var grade;
           const assignment = document.createElement("form");
+          assignment.onsubmit = function(event) {
+            const a = document.querySelector("#assignment-name-form").value;
+            const b = document.querySelector("#assignment-grade-form").value;
+            const c = document.querySelector("#assignment-type-form").value;
+
+            const okOptions = ['summative', 'classwork', 'independent', 's', 'c', 'i'];
+            const formatedOptions = {
+              "s": "summative",
+              "c": "classwork",
+              "i": "independent",
+              "summative": "summative",
+              "classwork": "classwork",
+              "independent": "independent",
+            }
+            if(okOptions.includes(c.toLowerCase())) {
+              createAssignment(a, b, formatedOptions[c], classroom.id, classroom.students);
+            } else {
+              event.preventDefault();
+              alert("Invalid assignment type. Please read the documentation!");
+            }
+          }
           assignment.classList.add("assignmentForm")
-          assignment.innerHTML = `<input id="Name" type="text" placeholder="Assignment Name?"><input id="Grade" type="text" placeholder="Total grade points"><input id="Type" type="text" placeholder="Assignment Type?"><button>Create Assignment</button>`;
+          assignment.innerHTML = `<input id="assignment-name-form" type="text" placeholder="Assignment Name?" required><input id="assignment-grade-form" type="number" placeholder="Total grade points" required><input id="assignment-type-form" type="text" placeholder="Assignment Type?" required><button type="submit">Create Assignment</button>`;
 
           studentWrapper.appendChild(assignment);
 
@@ -526,6 +545,35 @@ const Teacher = (props) => {
                 errorToast(theError.replace("Error:", ""));
             }
         }
+    }
+
+    function createAssignment(name, grade, type, classroomID, students) {
+      const lowerLetters = "abcdefghijklmnopqrstuvwxyz";
+      const upperLetters = lowerLetters.toUpperCase();
+      const numbers = "1234567890";
+      let generatedID = "";
+      let lengthOfId = 35;
+      //generating a assignmentID
+      for (let i = 0; i < lengthOfId; i++) {
+          const combinedChars = lowerLetters + upperLetters + numbers;
+          const index = Math.floor(Math.random() * combinedChars.length);
+          generatedID += combinedChars[index]
+      }
+
+      const reference = ref(db, 'assignments/' + generatedID);
+      let grades = [];
+      students.forEach((i) => {
+        grades.push({"grade": "N/A", "student": i})
+      });
+      const data = {
+        "name": name,
+        "worth": grade,
+        "type": type,
+        "classroomID": classroomID,
+        "grades": grades,
+      }
+      set(reference, data);
+
     }
 
     return (
