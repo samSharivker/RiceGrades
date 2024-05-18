@@ -132,11 +132,31 @@ const Teacher = (props) => {
         })
       })
     }
+    function getGradingPolicy(classroomID){
+      return new Promise((resolve, reject) => {
+        const dbRef = ref(db);
+        const gradingPolicyRef = child(dbRef, 'classrooms/' + classroomID + '/gradingPolicy');
 
+        get(gradingPolicyRef).then((snapshot) => {
+          if(snapshot.exists()){
+            resolve(snapshot.val())
+            return;
+          }
+        })
+      })
+    }
     function updateStudentGrade(classroomID, target, grade, worth, type, assignmentID) {
       return new Promise((resolve, reject)  => {
           const dbRef = ref(db);
           const gradesRef = child(dbRef, 'classrooms/' + classroomID + '/grades');
+          var gradingPolicyRef = child(dbRef, 'classrooms/' + classroomID + '/gradingPolicy');
+
+          get(gradingPolicyRef).then((snapshot) => {
+            if(snapshot.exists()){
+              gradingPolicyRef = snapshot.val()
+            }
+          })
+          console.log(gradingPolicyRef)
           get(gradesRef).then((snapshot) => {
               if(snapshot.exists()) {
                   const grades = snapshot.val();
@@ -147,38 +167,73 @@ const Teacher = (props) => {
                             if(type === "summative"){
                               getStudentAssignmentGrade(assignmentID, target).then((result)=>{
                                 if (result === "N/A"){
-                                  student.grade.earnedSummative += parseInt(grade);
-                                  student.grade.worthSummative += parseInt(worth);
-                                  update(child(gradesRef, studentID, 'grade/'), student)
+                                  getGradingPolicy(classroomID).then((output)=>{
+                                    student.grade.earnedSummative += parseInt(grade);
+                                    student.grade.worthSummative += parseInt(worth);
+                                    student.grade.summative = 100*(student.grade.earnedSummative/student.grade.worthSummative)
+                                    student.grade.overall = ((output.summative/100)*student.grade.summative)+((output.classwork/100)*student.grade.classwork)+((output.independent/100)*student.grade.independent)
+                                    update(child(gradesRef, studentID, 'grade/'), student)
+                                  })
+                                  // student.grade.earnedSummative += parseInt(grade);
+                                  // student.grade.worthSummative += parseInt(worth);
+                                  // student.grade.summative = 100*(student.grade.earnedSummative/student.grade.worthSummative)
+                                  // update(child(gradesRef, studentID, 'grade/'), student)
                                 } else {
-                                  student.grade.earnedSummative -= result;
-                                  student.grade.earnedSummative += parseInt(grade);
-                                  update(child(gradesRef, studentID, 'grade/'), student)
+                                  getGradingPolicy(classroomID).then((output)=>{
+                                    student.grade.earnedSummative -= parseInt(result);
+                                    student.grade.earnedSummative += parseInt(grade);
+                                    student.grade.summative = 100*(student.grade.earnedSummative/student.grade.worthSummative)
+                                    student.grade.overall = ((output.summative/100)*student.grade.summative)+((output.classwork/100)*student.grade.classwork)+((output.independent/100)*student.grade.independent)
+                                    update(child(gradesRef, studentID, 'grade/'), student)
+                                  })
+                                  // student.grade.earnedSummative -= result;
+                                  // student.grade.earnedSummative += parseInt(grade);
+                                  // student.grade.summative = 100*student.grade.earnedSummative/student.grade.worthSummative
+                                  // update(child(gradesRef, studentID, 'grade/'), student)
                                 }
                               })
 
                             } else if(type === "classwork"){
                               getStudentAssignmentGrade(assignmentID, target).then((result)=>{
                                 if (result === "N/A"){
-                                  student.grade.earnedClasswork += parseInt(grade);
-                                  student.grade.worthClasswork += parseInt(worth);
-                                  update(child(gradesRef, studentID, 'grade/'), student)
+                                  getGradingPolicy(classroomID).then((output)=>{
+                                    student.grade.earnedClasswork += parseInt(grade);
+                                    student.grade.worthClasswork += parseInt(worth);
+                                    student.grade.classwork = 100*(student.grade.earnedClasswork/student.grade.worthClasswork)
+                                    student.grade.overall = ((output.summative/100)*student.grade.summative)+((output.classwork/100)*student.grade.classwork)+((output.independent/100)*student.grade.independent)
+                                    update(child(gradesRef, studentID, 'grade/'), student)
+                                  })
                                 } else {
-                                  student.grade.earnedClasswork -= result;
-                                  student.grade.earnedClasswork += parseInt(grade);
-                                  update(child(gradesRef, studentID, 'grade/'), student)
+                                  getGradingPolicy(classroomID).then((output)=>{
+                                    student.grade.earnedClasswork -= parseInt(result);
+                                    student.grade.earnedClasswork += parseInt(grade);
+                                    student.grade.classwork = 100*(student.grade.earnedClasswork/student.grade.worthClasswork)
+                                    student.grade.overall = ((output.summative/100)*student.grade.summative)+((output.classwork/100)*student.grade.classwork)+((output.independent/100)*student.grade.independent)
+                                    update(child(gradesRef, studentID, 'grade/'), student)
+                                  })
                                 }
                               })
                             } else if(type === "independent"){
                               getStudentAssignmentGrade(assignmentID, target).then((result)=>{
                                 if (result === "N/A"){
-                                  student.grade.earnedIndependent += parseInt(grade);
-                                  student.grade.worthIndependent += parseInt(worth);
-                                  update(child(gradesRef, studentID, 'grade/'), student)
+                                  getGradingPolicy(classroomID).then((output)=>{
+                                    console.log(parseInt(grade))
+                                    student.grade.earnedIndependent += parseInt(grade);
+                                    student.grade.worthIndependent += parseInt(worth);
+                                    student.grade.independent = 100*(student.grade.earnedIndependent/student.grade.worthIndependent)
+                                    student.grade.overall = ((output.summative/100)*student.grade.summative)+((output.classwork/100)*student.grade.classwork)+((output.independent/100)*student.grade.independent)
+                                    update(child(gradesRef, studentID, 'grade/'), student)
+                                  })
                                 } else {
-                                  student.grade.earnedIndependent -= result;
-                                  student.grade.earnedIndependent += parseInt(grade);
-                                  update(child(gradesRef, studentID, 'grade/'), student)
+                                  getGradingPolicy(classroomID).then((output)=>{
+                                    console.log(parseInt(result))
+                                    console.log(parseInt(grade))
+                                    student.grade.earnedIndependent -= parseInt(result);
+                                    student.grade.earnedIndependent += parseInt(grade);
+                                    student.grade.independent = 100*(student.grade.earnedIndependent/student.grade.worthIndependent)
+                                    student.grade.overall = ((output.summative/100)*student.grade.summative)+((output.classwork/100)*student.grade.classwork)+((output.independent/100)*student.grade.independent)
+                                    update(child(gradesRef, studentID, 'grade/'), student)
+                                  })
                                 }
                               })
                             }
@@ -401,11 +456,10 @@ const Teacher = (props) => {
             refreshButton.remove();
           }
       })
-      let output = []
       //add assignment
       addAssignmentButton.addEventListener("click", () => {
         if(document.querySelector('.deez') === null) { //if dropdown currently closed
-          fetchAssignments(classroom.id, output)
+          fetchAssignments(classroom.id)
           .then((result) => {
             if(result === null) {
               console.log("no assignments");
@@ -701,8 +755,9 @@ const Teacher = (props) => {
 
     }
 
-    function fetchAssignments(classroomID, output) {
+    function fetchAssignments(classroomID) {
       return new Promise((resolve, reject) => {
+        let output = []
         const dbRef = ref(db);
         get(child(dbRef, 'assignments/')).then((snapshot) => {
           if(snapshot.exists()) {
