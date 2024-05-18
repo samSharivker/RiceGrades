@@ -112,8 +112,28 @@ const Teacher = (props) => {
         })
       })
     }
+    function getStudentAssignmentGrade(assignmentID, student){
+      return new Promise((resolve, reject) => {
+        const dbRef = ref(db);
+        const gradesRef = child(dbRef, 'assignments/' + assignmentID + '/grades');
+        get(gradesRef).then((snapshot) => {
+          if(snapshot.exists()) {
+            const data = snapshot.val();
+            for(let key in data){
+              if(data[key].student === student) {
+                resolve(data[key].grade);
+                return;
+              }
+            }
+          }
+        }).catch((error) => {
+          console.log(error);
+          reject(error);
+        })
+      })
+    }
 
-    function updateStudentGrade(classroomID, target, grade, worth, type) {
+    function updateStudentGrade(classroomID, target, grade, worth, type, assignmentID) {
       return new Promise((resolve, reject)  => {
           const dbRef = ref(db);
           const gradesRef = child(dbRef, 'classrooms/' + classroomID + '/grades');
@@ -125,22 +145,43 @@ const Teacher = (props) => {
                           const student = grades[studentID];
                           if (student.student === target) {
                             if(type === "summative"){
-                              student.grade.earnedSummative += parseInt(grade);
-                              student.grade.worthSummative += parseInt(worth);
-                              console.log(student)
-                              update(child(gradesRef, studentID, 'grade/'), student)
-                            } else if(type === "classwork"){
-                              student.grade.earnedClasswork += parseInt(grade);
-                              student.grade.worthClasswork += parseInt(worth);
-                              console.log(student)
-                              update(child(gradesRef, studentID, 'grade/'), student)
-                            } else if(type === "independent"){
-                              student.grade.earnedIndependent += parseInt(grade);
-                              student.grade.worthIndependent += parseInt(worth);
-                              console.log(student)
-                              update(child(gradesRef, studentID, 'grade/'), student)
-                            }
+                              getStudentAssignmentGrade(assignmentID, target).then((result)=>{
+                                if (result === "N/A"){
+                                  student.grade.earnedSummative += parseInt(grade);
+                                  student.grade.worthSummative += parseInt(worth);
+                                  update(child(gradesRef, studentID, 'grade/'), student)
+                                } else {
+                                  student.grade.earnedSummative -= result;
+                                  student.grade.earnedSummative += parseInt(grade);
+                                  update(child(gradesRef, studentID, 'grade/'), student)
+                                }
+                              })
 
+                            } else if(type === "classwork"){
+                              getStudentAssignmentGrade(assignmentID, target).then((result)=>{
+                                if (result === "N/A"){
+                                  student.grade.earnedClasswork += parseInt(grade);
+                                  student.grade.worthClasswork += parseInt(worth);
+                                  update(child(gradesRef, studentID, 'grade/'), student)
+                                } else {
+                                  student.grade.earnedClasswork -= result;
+                                  student.grade.earnedClasswork += parseInt(grade);
+                                  update(child(gradesRef, studentID, 'grade/'), student)
+                                }
+                              })
+                            } else if(type === "independent"){
+                              getStudentAssignmentGrade(assignmentID, target).then((result)=>{
+                                if (result === "N/A"){
+                                  student.grade.earnedIndependent += parseInt(grade);
+                                  student.grade.worthIndependent += parseInt(worth);
+                                  update(child(gradesRef, studentID, 'grade/'), student)
+                                } else {
+                                  student.grade.earnedIndependent -= result;
+                                  student.grade.earnedIndependent += parseInt(grade);
+                                  update(child(gradesRef, studentID, 'grade/'), student)
+                                }
+                              })
+                            }
                               return;
                           }
                       }
@@ -360,10 +401,9 @@ const Teacher = (props) => {
             refreshButton.remove();
           }
       })
-
+      let output = []
       //add assignment
       addAssignmentButton.addEventListener("click", () => {
-        let output = []
         if(document.querySelector('.deez') === null) { //if dropdown currently closed
           fetchAssignments(classroom.id, output)
           .then((result) => {
@@ -443,10 +483,12 @@ const Teacher = (props) => {
                           return
                         } else {
                           // alert("Ok i will change this");
+                          console.log("worker")
+                          updateStudentGrade(classroom.id, student.innerHTML, getAssignmentGrade, snapshot.val().worth, snapshot.val().type, getAssignment.id)
+
+                          console.log("working")
                           updateAssignmentGradeDB(getAssignment.id, student.innerHTML, getAssignmentGrade,)
-                          .then(()=>{
-                            updateStudentGrade(classroom.id, student.innerHTML, getAssignmentGrade, snapshot.val().worth, snapshot.val().type)
-                          })
+
                           return;
                         }
                       } else if(snapshot.val().type === "classwork"){
@@ -457,10 +499,8 @@ const Teacher = (props) => {
                             return
                           } else {
                             // alert("Ok i will change this");
+                            updateStudentGrade(classroom.id, student.innerHTML, getAssignmentGrade, snapshot.val().worth, snapshot.val().type, getAssignment.id)
                             updateAssignmentGradeDB(getAssignment.id, student.innerHTML, getAssignmentGrade)
-                            .then(()=>{
-                              updateStudentGrade(classroom.id, student.innerHTML, getAssignmentGrade, snapshot.val().type)
-                            })
                             return;
                           }
 
@@ -472,10 +512,11 @@ const Teacher = (props) => {
                             return
                           } else {
                             // alert("Ok i will change this");
+                            updateStudentGrade(classroom.id, student.innerHTML, getAssignmentGrade, snapshot.val().worth, snapshot.val().type, getAssignment.id)
+
                             updateAssignmentGradeDB(getAssignment.id, student.innerHTML, getAssignmentGrade)
-                            .then(()=>{
-                              updateStudentGrade(classroom.id, student.innerHTML, getAssignmentGrade, snapshot.val().type)
-                            })
+
+
                             return;
                           }
                       }
@@ -683,7 +724,7 @@ const Teacher = (props) => {
             resolve(null);
           }
         }).catch((error) => {
-          console.log(error);
+          // console.log(error);
           reject(error);
         })
       })
