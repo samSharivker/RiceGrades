@@ -315,6 +315,17 @@ const Teacher = (props) => {
                     array.push(i)
                   })
                   set(ref(db, 'classrooms/' + classroom.id + '/students'), array)
+                  // window.location.reload();
+                }
+              })
+              //update grade system;
+              get(child(dbRef, 'classrooms/' + classroom.id)).then((snapshot) => {
+                if(snapshot.exists()) {
+                  let array2 = snapshot.val().grades;
+                  input.forEach((i) => {
+                    array2.push({"student": i, "grade": {"summative": 100, "earnedSummative":0, "worthSummative": 0,"classwork": 100, "earnedClasswork": 0, "worthClasswork": 0, "independent": 100, "earnedIndependent":0, "worthIndependent": 0, "overall": 100}})
+                  })
+                  set(ref(db, 'classrooms/' + classroom.id + '/grades'), array2)
                   window.location.reload();
                 }
               })
