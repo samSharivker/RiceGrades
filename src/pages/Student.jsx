@@ -66,7 +66,7 @@ const Student = (props) => {
                     if(students.includes(user.user.email)) {
                       data[key].grades.forEach((i) => {
                         if(i.student === user.user.email) {
-                          displayClassroom(data[key], i.grade) //classroom data and student grade
+                          displayClassroom(data[key], (Math.round(100*i.grade.overall)/100) + "%") //classroom data and student grade
                         }
                       })
                     }
