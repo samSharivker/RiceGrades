@@ -94,7 +94,7 @@ export default function Login({ user }) {
     }
     // function for user to login
     const handleSignIn = (event) => {
-        event.preventDefault();
+        event.preventDefault();  // prevent reloading
         if(!email || !password) return;
             signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
@@ -108,6 +108,7 @@ export default function Login({ user }) {
                 alert(errorMessage)
             });
     }
+
 
     const roles = ["student", "teacher"]
     const lsb = document.querySelector("#lsb");
@@ -130,6 +131,7 @@ export default function Login({ user }) {
             ltb.style.backgroundColor = "#618264";
         }
     }
+
     if (user) {
         getUserRole(user.uid)
         .then((userRole) => {

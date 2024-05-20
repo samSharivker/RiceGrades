@@ -377,7 +377,7 @@ const Teacher = (props) => {
         }
 
         const b = document.createElement("p");
-        b.innerHTML = `Number of Students: ${classroom.grades.length}`;
+        b.innerHTML = `Number of Students: ${classroom.students.length}`;
         b.classList.add("student-count-display")
 
         const classroomButtonWrapper = document.createElement("div");
@@ -437,7 +437,7 @@ const Teacher = (props) => {
         viewStudentsButton.addEventListener("click", () => {
           if(document.querySelector('.deez') === null) { //if dropdown currently closed
               studentWrapper.appendChild(addStudentsButton);
-              classroom.grades.forEach((i) => {
+              classroom.students.forEach((i) => {
                   const student = document.createElement("p");
                   student.innerHTML = i;
                   student.classList.add("deez");
@@ -523,7 +523,7 @@ const Teacher = (props) => {
 
 
             studentWrapper.appendChild(refreshButton); // refresh view button
-            classroom.grades.forEach((i) => {
+            classroom.students.forEach((i) => {
                 const student = document.createElement("p");
                 student.innerHTML = i;
                 student.classList.add("deez");
