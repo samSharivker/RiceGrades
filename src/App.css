@@ -282,13 +282,14 @@ svg {
 }
 
 #support-form {
-    background-color: var(--main-bg-color);
+    background: linear-gradient(#618264, #79AC78);
 }
 
 .support-form {
-    background-color: var(--main-bg-color);
+    background: linear-gradient(#618264, #79AC78);
     max-width: 1400px;
     margin: 0 auto;
+    text-shadow: 2px 2px #B0D9B1;
 }
 
 .support-form .container {
@@ -423,7 +424,8 @@ svg {
     align-items: center;
     display: flex;
     flex-direction: column;
-    background-color: var(--main-bg-color);
+    background: linear-gradient(#618264, #79AC78);
+    text-shadow: 2px 2px #B0D9B1;
 }
 
 #login-page fieldset {
@@ -572,4 +574,8 @@ svg {
 
 .class-list p {
     font-size: 1.2rem;
+}
+
+.student-assignments-wrapper h {
+    font-size: 2.5rem;
 }

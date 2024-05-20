@@ -331,7 +331,23 @@ const Teacher = (props) => {
                     array2.push({"student": i, "grade": {"summative": 100, "earnedSummative":0, "worthSummative": 0,"classwork": 100, "earnedClasswork": 0, "worthClasswork": 0, "independent": 100, "earnedIndependent":0, "worthIndependent": 0, "overall": 100}})
                   })
                   set(ref(db, 'classrooms/' + classroom.id + '/grades'), array2)
-                  window.location.reload();
+                  // window.location.reload();
+                }
+              })
+              //update assignments
+              get(child(dbRef, 'assignments')).then((snapshot) => {
+                if(snapshot.exists()) {
+                  const data = snapshot.val();
+                  for(let key in data) {
+                    if(data[key].classroomID === classroom.id) {
+                      let array3 = data[key].grades;
+                      input.forEach((i) => {
+                        array3.push({"grade": "N/A", "student": i});
+                        set(ref(db, 'assignments/' + data[key].assignmentID + "/" + "/grades"), array3)
+                        window.location.reload();
+                      })
+                    }
+                  }
                 }
               })
             }
@@ -361,7 +377,7 @@ const Teacher = (props) => {
         }
 
         const b = document.createElement("p");
-        b.innerHTML = `Number of Students: ${classroom.students.length}`;
+        b.innerHTML = `Number of Students: ${classroom.grades.length}`;
         b.classList.add("student-count-display")
 
         const classroomButtonWrapper = document.createElement("div");
@@ -421,12 +437,12 @@ const Teacher = (props) => {
         viewStudentsButton.addEventListener("click", () => {
           if(document.querySelector('.deez') === null) { //if dropdown currently closed
               studentWrapper.appendChild(addStudentsButton);
-              classroom.students.forEach((i) => {
+              classroom.grades.forEach((i) => {
                   const student = document.createElement("p");
                   student.innerHTML = i;
                   student.classList.add("deez");
                   studentWrapper.appendChild(student);
-                  if(classroom.students.length > 1) {
+                  if(classroom.grades.length > 1) {
                     student.addEventListener("click", () => { //make it so that if you click the student they can be deleted by using innerHTML as reference
                       getStudents(student.innerHTML)
                       .then((result) => {
@@ -507,7 +523,7 @@ const Teacher = (props) => {
 
 
             studentWrapper.appendChild(refreshButton); // refresh view button
-            classroom.students.forEach((i) => {
+            classroom.grades.forEach((i) => {
                 const student = document.createElement("p");
                 student.innerHTML = i;
                 student.classList.add("deez");
