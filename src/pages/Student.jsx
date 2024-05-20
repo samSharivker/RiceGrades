@@ -57,6 +57,7 @@ const Student = (props) => {
           get(child(dbRef, 'classrooms/')).then((snapshot) => {
               if (snapshot.exists()) {
                   const data = snapshot.val();
+                  console.log(data)
                   for (let key in data) {
                     const students = data[key].students;
                     /*

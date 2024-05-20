@@ -43,7 +43,6 @@ const Teacher = (props) => {
 
     function getClassrooms() {
         return new Promise((resolve, reject) => {
-            console.log(dbRef)
             get(child(dbRef, 'classrooms/')).then((snapshot) => {
                 if (snapshot.exists()) {
                     const data = snapshot.val();
@@ -74,7 +73,10 @@ const Teacher = (props) => {
           if(snapshot.exists()) {
             const data = snapshot.val();
             for(let key in data) {
+              console.log(data[key])
               if(data[key].email === target) {
+
+                console.log(data[key].firstName)
                 resolve([data[key].firstName, data[key].lastName]);
                 return;
               }
@@ -209,7 +211,6 @@ const Teacher = (props) => {
                                 // execute if there is no grade on the assignment
                                 if (result === "N/A"){
                                   getGradingPolicy(classroomID).then((output)=>{
-                                    console.log(parseInt(grade))
                                     student.grade.earnedIndependent += parseInt(grade);
                                     student.grade.worthIndependent += parseInt(worth);
                                     student.grade.independent = 100*(student.grade.earnedIndependent/student.grade.worthIndependent)
@@ -287,6 +288,7 @@ const Teacher = (props) => {
 
         //error handling
         input.forEach((i) => {
+          console.log(i)
           const a = i.split("");
           if(!a.includes("@") || a.length < 2) {
             errorToast("Students were not added in the correct format. Please read the directions and try again!");
@@ -296,13 +298,16 @@ const Teacher = (props) => {
 
 
         input.forEach((i) => {
+          console.log(i)
           //checking that added students exist in the database
           getStudents(i)
           .then((result) => {
+            console.log(result + "result")  // null
+            console.log(classroom.grades.student) // undefined
             if(result === null) {
               errorToast(`${i} does not have an account. Please have the student register first!`);
               return;
-            } else if(classroom.students.includes(i)) {
+            } else if(classroom.grades.student === i) {
               errorToast("This student is already in your classroom!");
               return;
             } else {
@@ -508,7 +513,7 @@ const Teacher = (props) => {
                 student.classList.add("deez");
                 student.setAttribute('id', i.replace(/[.@]/g, "")); //create students with p element and give them id based on their email
                 studentWrapper.appendChild(student);
-                getStudentGrade(classroom.id, student.innerHTML) //create tooltip for each p element with the student's greade
+                getStudentGrade(classroom.id, i) //create tooltip for each p element with the student's greade
                 .then((result) => {
                   tippy(`#${i.replace(/[.@]/g, "")}`, {
                     content: result,
@@ -519,7 +524,6 @@ const Teacher = (props) => {
                   const getAssignmentNumber = parseInt(prompt("Which assignment grade do you want to edit for the student? Please type the number that you see corrosponding in the assignment list above."));
 
                   const getAssignment = document.querySelector(`.assignment-item[name="${getAssignmentNumber}"]`);
-                  console.log(getAssignment)
                   if(getAssignment === null) {
                     alert("This assignment does not exist");
                     return;
@@ -772,7 +776,7 @@ const Teacher = (props) => {
             resolve(null);
           }
         }).catch((error) => {
-          // console.log(error);
+          console.log(error);
           reject(error);
         })
       })
