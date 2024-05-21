@@ -548,7 +548,13 @@ const Teacher = (props) => {
                   get(gradesRef).then((snapshot)=>{
                     if(snapshot.exists()){
                       if(snapshot.val().type === "summative"){
-                        const getAssignmentGrade = parseInt(prompt("What grade do you want the student to have for this assignment? They currently have a:\n[ex number] / [worth]"));
+                        let currentGrade;
+                        snapshot.val().grades.forEach((i) => {
+                          if(i.student === student.innerHTML) {
+                            currentGrade = i.grade
+                          }
+                        })
+                        const getAssignmentGrade = parseInt(prompt(`What grade do you want the student to have for this assignment? They currently have a:\n${currentGrade} / ${snapshot.val().worth}`));
 
                         if(isNaN(getAssignmentGrade)) {
                           alert("Not a valid number!");
