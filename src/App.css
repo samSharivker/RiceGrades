@@ -558,6 +558,12 @@ svg {
     padding: 2rem 0rem;
 }
 
+.class-list button {
+    padding: 1rem;
+    border: transparent;
+    border-radius: 5px;
+}
+
 .class-list li {
     max-width: 35rem;
     list-style: none;
@@ -578,4 +584,50 @@ svg {
 
 .student-assignments-wrapper h {
     font-size: 2.5rem;
+}
+
+.student-page {
+    background: linear-gradient(#618264, #79AC78);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.display-current-user {
+    text-align: center;
+    background-color: white;
+    max-width: 35rem;
+    padding: 1rem;
+    margin-top: 1rem;
+    border: 5px solid black;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.display-current-user span {
+    font-size: 2.5rem;
+}
+
+.display-current-user #current-user-email {
+    font-size: 1.5rem;
+}
+
+.display-current-user button {
+    background-color: red;
+    border: transparent;
+    padding: 0.25rem;
+    font-size: 1.25rem;
+    border-radius: 5px;
+}
+
+@media screen and (max-width: 455px) {
+    .class-list h {
+        font-size: 3rem;
+    }
+    .class-list p {
+        font-size: 1rem;
+    }
 }

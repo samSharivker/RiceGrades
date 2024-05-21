@@ -29,9 +29,9 @@ const Student = (props) => {
               let grade;
               a.forEach((i) => {
                 if(i.student === user.user.email) {
-                  points = i.grade // console.log("Points:" + i.grade);
-                  worth = data[key].worth // console.log("Worth:" + data[key].worth);
-                  grade = roundGrade((i.grade / data[key].worth) * 100) // console.log("Grade" + roundGrade((i.grade / data[key].worth) * 100))
+                  points = i.grade
+                  worth = data[key].worth
+                  grade = roundGrade((i.grade / data[key].worth) * 100)
                 }
               })
               const info = {
@@ -102,7 +102,6 @@ const Student = (props) => {
           fetchAssignments(classroom.id)
           .then((results) => {
             results.forEach((i) => {
-              console.log(i);
               const z = document.createElement("div");
               z.classList.add("deez");
 
@@ -161,7 +160,6 @@ const Student = (props) => {
           get(child(dbRef, 'classrooms/')).then((snapshot) => {
               if (snapshot.exists()) {
                   const data = snapshot.val();
-                  console.log(data)
                   for (let key in data) {
                     const students = data[key].students;
                     /*
@@ -187,14 +185,36 @@ const Student = (props) => {
   }
 
   getClassrooms() //runs on page load
+  displayCurrentUser() //runs on page load
+
+  function displayCurrentUser() {
+    get(child(dbRef, 'users/')).then((snapshot) => {
+      if(snapshot.exists()) {
+        const data = snapshot.val();
+        for(let key in data) {
+          if(data[key].email === user.user.email) {
+            document.querySelector("#current-user-name").innerHTML = data[key].firstName;
+            document.querySelector("#current-user-last").innerHTML = data[key].lastName;
+            document.querySelector("#current-user-email").innerHTML = data[key].email;
+          }
+        }
+      }
+    })
+  }
 
   return (
     <div>
       <Nav />
-      <div className="student-class-wrapper">
-        <ul className="class-list"></ul>
+      <div className="student-page">
+        <div className="display-current-user">
+          <p><span id="current-user-name"></span> <span id="current-user-last"></span></p>
+          <p id="current-user-email"></p>
+          <button onClick={handleSignOut}>Sign Out</button>
+        </div>
+        <div className="student-class-wrapper">
+          <ul className="class-list"></ul>
+        </div>
       </div>
-      <button onClick={handleSignOut}>Sign Out</button>
       <Footer />
     </div>
   );
