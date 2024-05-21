@@ -281,8 +281,23 @@ svg {
     padding-bottom: 2rem;
 }
 
+.change-log-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(#618264, #79AC78);
+}
+
+.change-log-wrapper ul {
+    padding-left: 1rem;
+}
+
+.change-log-wrapper li {
+    font-size: 2rem;
+    text-decoration: none;
+}
+
 #support-form {
     background: linear-gradient(#618264, #79AC78);
+    min-height: 100vh;
 }
 
 .support-form {

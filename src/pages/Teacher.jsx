@@ -73,10 +73,7 @@ const Teacher = (props) => {
           if(snapshot.exists()) {
             const data = snapshot.val();
             for(let key in data) {
-              console.log(data[key])
               if(data[key].email === target) {
-
-                console.log(data[key].firstName)
                 resolve([data[key].firstName, data[key].lastName]);
                 return;
               }
@@ -288,7 +285,6 @@ const Teacher = (props) => {
 
         //error handling
         input.forEach((i) => {
-          console.log(i)
           const a = i.split("");
           if(!a.includes("@") || a.length < 2) {
             errorToast("Students were not added in the correct format. Please read the directions and try again!");
@@ -298,12 +294,9 @@ const Teacher = (props) => {
 
 
         input.forEach((i) => {
-          console.log(i)
           //checking that added students exist in the database
           getStudents(i)
           .then((result) => {
-            console.log(result + "result")  // null
-            console.log(classroom.grades.student) // undefined
             if(result === null) {
               errorToast(`${i} does not have an account. Please have the student register first!`);
               return;
