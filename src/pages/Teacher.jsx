@@ -170,6 +170,7 @@ const Teacher = (props) => {
                                     student.grade.worthSummative += parseInt(worth);
                                     student.grade.summative = 100*(student.grade.earnedSummative/student.grade.worthSummative)
                                     student.grade.overall = ((output.summative/100)*student.grade.summative)+((output.classwork/100)*student.grade.classwork)+((output.independent/100)*student.grade.independent) // formula for combining three categories into an overall grade
+                                    console.log(student)
                                     update(child(gradesRef, studentID, 'grade/'), student)
                                   })
                                 } else {
@@ -179,6 +180,7 @@ const Teacher = (props) => {
                                     student.grade.earnedSummative += parseInt(grade);
                                     student.grade.summative = 100*(student.grade.earnedSummative/student.grade.worthSummative)
                                     student.grade.overall = ((output.summative/100)*student.grade.summative)+((output.classwork/100)*student.grade.classwork)+((output.independent/100)*student.grade.independent) // formula for combining three categories into an overall grade
+                                    console.log(student)
                                     update(child(gradesRef, studentID, 'grade/'), student)
                                   })
                                 }
@@ -187,7 +189,7 @@ const Teacher = (props) => {
                             } else if(type === "classwork"){
                               getStudentAssignmentGrade(assignmentID, target).then((result)=>{
                                  // execute if there is no grade on the assignment
-                                if (result === "N/A"){
+                                 if (result === "N/A"){
                                   getGradingPolicy(classroomID).then((output)=>{
                                     student.grade.earnedClasswork += parseInt(grade);
                                     student.grade.worthClasswork += parseInt(worth);
@@ -483,6 +485,9 @@ const Teacher = (props) => {
           .then((result) => {
             if(result === null) {
               console.log("no assignments");
+              const assignmentP = document.createElement("p");
+              assignmentP.innerHTML = "There is currently no assignment"
+              document.querySelector(".assignmentForm").appendChild(assignmentP);
             } else {
               result.forEach((i, count) => {
                 const assignmentP = document.createElement("p");
