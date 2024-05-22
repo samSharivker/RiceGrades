@@ -52,7 +52,7 @@ export default function ChangeLog() {
     return (
         <>
             <Nav />
-            <div>
+            <div className="change-log-wrapper">
                 <h3>May Changes:</h3>
                     <br></br>
                     <ul>{listItemsMay}</ul>

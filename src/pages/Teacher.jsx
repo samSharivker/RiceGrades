@@ -66,6 +66,7 @@ const Teacher = (props) => {
     }
 
     getClassrooms() //runs on page load
+    displayCurrentUser()
 
     function getStudents(target) {
       return new Promise((resolve, reject) => {
@@ -73,10 +74,7 @@ const Teacher = (props) => {
           if(snapshot.exists()) {
             const data = snapshot.val();
             for(let key in data) {
-              console.log(data[key])
               if(data[key].email === target) {
-
-                console.log(data[key].firstName)
                 resolve([data[key].firstName, data[key].lastName]);
                 return;
               }
@@ -290,7 +288,6 @@ const Teacher = (props) => {
 
         //error handling
         input.forEach((i) => {
-          console.log(i)
           const a = i.split("");
           if(!a.includes("@") || a.length < 2) {
             errorToast("Students were not added in the correct format. Please read the directions and try again!");
@@ -300,12 +297,9 @@ const Teacher = (props) => {
 
 
         input.forEach((i) => {
-          console.log(i)
           //checking that added students exist in the database
           getStudents(i)
           .then((result) => {
-            console.log(result + "result")  // null
-            console.log(classroom.grades.student) // undefined
             if(result === null) {
               errorToast(`${i} does not have an account. Please have the student register first!`);
               return;
@@ -553,7 +547,13 @@ const Teacher = (props) => {
                   get(gradesRef).then((snapshot)=>{
                     if(snapshot.exists()){
                       if(snapshot.val().type === "summative"){
-                        const getAssignmentGrade = parseInt(prompt("What grade do you want the student to have for this assignment? They currently have a:\n[ex number] / [worth]"));
+                        let currentGrade;
+                        snapshot.val().grades.forEach((i) => {
+                          if(i.student === student.innerHTML) {
+                            currentGrade = i.grade
+                          }
+                        })
+                        const getAssignmentGrade = parseInt(prompt(`What grade do you want the student to have for this assignment? They currently have a:\n${currentGrade} / ${snapshot.val().worth}`));
 
                         if(isNaN(getAssignmentGrade)) {
                           alert("Not a valid number!");
@@ -834,14 +834,33 @@ const Teacher = (props) => {
         });
       });
     }
+    function displayCurrentUser() {
+      get(child(dbRef, 'users/')).then((snapshot) => {
+        if(snapshot.exists()) {
+          const data = snapshot.val();
+          for(let key in data) {
+            if(data[key].email === user.user.email) {
+              document.querySelector("#current-user-name").innerHTML = data[key].firstName;
+              document.querySelector("#current-user-last").innerHTML = data[key].lastName;
+              document.querySelector("#current-user-email").innerHTML = data[key].email;
+            }
+          }
+        }
+      })
+    }
 
     return (
         <div>
             <Nav />
-            <button onClick={createClassroom}>Create Classroom</button>
-            <p>teacher page</p>
-            <div className="classroom-wrapper"></div>
-            <button onClick={handleSignOut}>Sign Out</button>
+            <div className="full-classroom-wrapper">
+            <div className="display-current-user">
+              <p><span id="current-user-name"></span> <span id="current-user-last"></span></p>
+              <p id="current-user-email"></p>
+              <button onClick={createClassroom}>Create Classroom</button>
+              <button onClick={handleSignOut}>Sign Out</button>
+            </div>
+              <div className="classroom-wrapper"></div>
+            </div>
             <Footer />
         </div>
     );
