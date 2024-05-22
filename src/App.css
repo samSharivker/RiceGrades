@@ -500,7 +500,7 @@ svg {
 }
 
 .classroom {
-    background-color: gray;
+    background: linear-gradient(#9a9a9a, #454545);
     max-width: 35rem;
     display: flex;
     flex-direction: column;
@@ -523,6 +523,10 @@ svg {
 .classroom button {
     padding: 0.3rem 0.3rem;
     margin: 0.1rem 0rem;
+}
+
+.classroom button:hover {
+    scale: 1.1;
 }
 
 .classroom .student-count-display {
@@ -582,11 +586,12 @@ svg {
 .class-list li {
     max-width: 35rem;
     list-style: none;
-    background-color: gray;
     display: flex;
     flex-direction: column;
     padding: 2rem;
     border-radius: 5px;
+    border: 5px solid black;
+    background: linear-gradient(#9a9a9a, #454545);
 }
 
 .class-list h {
