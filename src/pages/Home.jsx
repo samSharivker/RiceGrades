@@ -1,6 +1,9 @@
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import Logo from '../img/logo.png';
+import Rice1 from '../img/sample-rice-1.png';
+import Rice2 from '../img/sample-rice-2.png';
+import Rice3 from '../img/sample-rice-3.png';
 
 export default function Home() {
     return (
@@ -10,7 +13,7 @@ export default function Home() {
                 <div className="header">
                     <div className="container">
                         <p>"Cook your Grades like your Rice" - Jiaming Lin</p>
-                        <img src="https://placehold.co/400x400.png" alt="temp" />
+                        <img id="rice-img" src={Logo} alt="temp" />
                     </div>
                 </div>
             </section>
@@ -30,9 +33,9 @@ export default function Home() {
                         <h>Gallery View</h> <br /><br /><br />
                         <div className="slider-wrapper">
                             <div className="slider">
-                                <img id="slide-1" src="https://placehold.co/640x360.png" alt="temp" />
-                                <img id="slide-2" src="https://placehold.co/640x360/000000/FFF" alt="temp" />
-                                <img id="slide-3" src="https://placehold.co/640x360/FF2400/FFF" alt="temp" />
+                                <img id="slide-1" src={Rice1} alt="temp" />
+                                <img id="slide-2" src={Rice2} alt="temp" />
+                                <img id="slide-3" src={Rice3} alt="temp" />
                             </div>
                             <div className="slider-nav">
                                 <a href="#slide-1">.</a>

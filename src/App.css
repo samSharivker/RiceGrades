@@ -122,6 +122,12 @@ nav {
     background-color: var(--main-bg-color);
 }
 
+#rice-img {
+    width: 400px;
+    height: 400px;
+    opacity: 0.8;
+}
+
 .gallery {
     background-color: var(--main-bg-color);
     max-width: 1400px;
