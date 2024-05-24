@@ -3,7 +3,7 @@ import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../firebase';
-import { ref, set, child, get, update, remove } from "firebase/database";
+import { ref, child, get} from "firebase/database";
 
 const Student = (props) => {
   const [user] = useState(props);
@@ -205,14 +205,18 @@ const Student = (props) => {
   return (
     <div>
       <Nav />
-      <div className="student-page">
-        <div className="display-current-user">
-          <p><span id="current-user-name"></span> <span id="current-user-last"></span></p>
-          <p id="current-user-email"></p>
-          <button onClick={handleSignOut}>Sign Out</button>
-        </div>
-        <div className="student-class-wrapper">
-          <ul className="class-list"></ul>
+      <div className="class-bg-img">
+        <div className="class-bg-tint">
+          <div className="student-page">
+            <div className="display-current-user">
+              <p><span id="current-user-name"></span> <span id="current-user-last"></span></p>
+              <p id="current-user-email"></p>
+              <button onClick={handleSignOut}>Sign Out</button>
+            </div>
+            <div className="student-class-wrapper">
+              <ul className="class-list"></ul>
+            </div>
+          </div>
         </div>
       </div>
       <Footer />
