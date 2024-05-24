@@ -287,14 +287,30 @@ svg {
     padding-bottom: 2rem;
 }
 
+.change-log-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(#618264, #79AC78);
+}
+
+.change-log-wrapper ul {
+    padding-left: 1rem;
+}
+
+.change-log-wrapper li {
+    font-size: 2rem;
+    text-decoration: none;
+}
+
 #support-form {
-    background-color: var(--main-bg-color);
+    background: linear-gradient(#618264, #79AC78);
+    min-height: 100vh;
 }
 
 .support-form {
-    background-color: var(--main-bg-color);
+    background: linear-gradient(#618264, #79AC78);
     max-width: 1400px;
     margin: 0 auto;
+    text-shadow: 2px 2px #B0D9B1;
 }
 
 .support-form .container {
@@ -429,7 +445,8 @@ svg {
     align-items: center;
     display: flex;
     flex-direction: column;
-    background-color: var(--main-bg-color);
+    background: linear-gradient(#618264, #79AC78);
+    text-shadow: 2px 2px #B0D9B1;
 }
 
 #login-page fieldset {
@@ -489,7 +506,7 @@ svg {
 }
 
 .classroom {
-    background-color: gray;
+    background: linear-gradient(#9a9a9a, #454545);
     max-width: 35rem;
     display: flex;
     flex-direction: column;
@@ -512,6 +529,10 @@ svg {
 .classroom button {
     padding: 0.3rem 0.3rem;
     margin: 0.1rem 0rem;
+}
+
+.classroom button:hover {
+    scale: 1.1;
 }
 
 .classroom .student-count-display {
@@ -562,14 +583,21 @@ svg {
     padding: 2rem 0rem;
 }
 
+.class-list button {
+    padding: 1rem;
+    border: transparent;
+    border-radius: 5px;
+}
+
 .class-list li {
     max-width: 35rem;
     list-style: none;
-    background-color: gray;
     display: flex;
     flex-direction: column;
     padding: 2rem;
     border-radius: 5px;
+    border: 5px solid black;
+    background: linear-gradient(#9a9a9a, #454545);
 }
 
 .class-list h {
@@ -578,4 +606,64 @@ svg {
 
 .class-list p {
     font-size: 1.2rem;
+}
+
+.student-assignments-wrapper h {
+    font-size: 2.5rem;
+}
+
+.student-page {
+    background: linear-gradient(#618264, #79AC78);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.display-current-user {
+    text-align: center;
+    background-color: white;
+    max-width: 35rem;
+    padding: 1rem;
+    margin-top: 1rem;
+    border: 5px solid black;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.display-current-user span {
+    font-size: 2.5rem;
+}
+
+.display-current-user #current-user-email {
+    font-size: 1.5rem;
+}
+
+.display-current-user button {
+    background-color: red;
+    border: transparent;
+    padding: 0.25rem;
+    font-size: 1.25rem;
+    border-radius: 5px;
+}
+
+@media screen and (max-width: 455px) {
+    .class-list h {
+        font-size: 3rem;
+    }
+    .class-list p {
+        font-size: 1rem;
+    }
+}
+
+.full-classroom-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(#618264, #79AC78);
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
 }

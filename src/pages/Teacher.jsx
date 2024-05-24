@@ -24,6 +24,7 @@ const Teacher = (props) => {
     This is just a more clean way to display error messages to the user so try to use this instead of just an alert
     https://github.com/apvarun/toastify-js/blob/master/README.md
     */
+    const dbRef = ref(db);
     function errorToast(msg) {
       Toastify({
 
@@ -42,8 +43,6 @@ const Teacher = (props) => {
 
     function getClassrooms() {
         return new Promise((resolve, reject) => {
-            const dbRef = ref(db);
-            console.log(dbRef)
             get(child(dbRef, 'classrooms/')).then((snapshot) => {
                 if (snapshot.exists()) {
                     const data = snapshot.val();
@@ -70,12 +69,14 @@ const Teacher = (props) => {
 
     function getStudents(target) {
       return new Promise((resolve, reject) => {
-        const dbRef = ref(db);
         get(child(dbRef, 'users/')).then((snapshot) => {
           if(snapshot.exists()) {
             const data = snapshot.val();
             for(let key in data) {
+              console.log(data[key])
               if(data[key].email === target) {
+
+                console.log(data[key].firstName)
                 resolve([data[key].firstName, data[key].lastName]);
                 return;
               }
@@ -90,10 +91,9 @@ const Teacher = (props) => {
         })
       })
     }
-
+    // a function to get the overall student grade
     function getStudentGrade(classroomID, target) {
       return new Promise((resolve, reject) => {
-        const dbRef = ref(db);
         get(child(dbRef, 'classrooms/' + classroomID + '/grades')).then((snapshot) => {
           if(snapshot.exists()) {
             const data = snapshot.val();
@@ -112,9 +112,9 @@ const Teacher = (props) => {
         })
       })
     }
+    // functions that will give the student grade on a specific assignment
     function getStudentAssignmentGrade(assignmentID, student){
       return new Promise((resolve, reject) => {
-        const dbRef = ref(db);
         const gradesRef = child(dbRef, 'assignments/' + assignmentID + '/grades');
         get(gradesRef).then((snapshot) => {
           if(snapshot.exists()) {
@@ -132,11 +132,27 @@ const Teacher = (props) => {
         })
       })
     }
-
+    function getGradingPolicy(classroomID){
+      return new Promise((resolve, reject) => {
+        const gradingPolicyRef = child(dbRef, 'classrooms/' + classroomID + '/gradingPolicy');
+        get(gradingPolicyRef).then((snapshot) => {
+          if(snapshot.exists()){
+            resolve(snapshot.val())
+            return;
+          }
+        })
+      })
+    }
     function updateStudentGrade(classroomID, target, grade, worth, type, assignmentID) {
       return new Promise((resolve, reject)  => {
-          const dbRef = ref(db);
           const gradesRef = child(dbRef, 'classrooms/' + classroomID + '/grades');
+          var gradingPolicyRef = child(dbRef, 'classrooms/' + classroomID + '/gradingPolicy');
+
+          get(gradingPolicyRef).then((snapshot) => {
+            if(snapshot.exists()){
+              gradingPolicyRef = snapshot.val()
+            }
+          })
           get(gradesRef).then((snapshot) => {
               if(snapshot.exists()) {
                   const grades = snapshot.val();
@@ -146,39 +162,72 @@ const Teacher = (props) => {
                           if (student.student === target) {
                             if(type === "summative"){
                               getStudentAssignmentGrade(assignmentID, target).then((result)=>{
+
+                                // execute if there is no grade on the assignment
                                 if (result === "N/A"){
-                                  student.grade.earnedSummative += parseInt(grade);
-                                  student.grade.worthSummative += parseInt(worth);
-                                  update(child(gradesRef, studentID, 'grade/'), student)
+                                  getGradingPolicy(classroomID).then((output)=>{
+                                    student.grade.earnedSummative += parseInt(grade);
+                                    student.grade.worthSummative += parseInt(worth);
+                                    student.grade.summative = 100*(student.grade.earnedSummative/student.grade.worthSummative)
+                                    student.grade.overall = ((output.summative/100)*student.grade.summative)+((output.classwork/100)*student.grade.classwork)+((output.independent/100)*student.grade.independent) // formula for combining three categories into an overall grade
+                                    console.log(student)
+                                    update(child(gradesRef, studentID, 'grade/'), student)
+                                  })
                                 } else {
-                                  student.grade.earnedSummative -= result;
-                                  student.grade.earnedSummative += parseInt(grade);
-                                  update(child(gradesRef, studentID, 'grade/'), student)
+                                  getGradingPolicy(classroomID).then((output)=>{
+                                    // subtract grade from the original then added the updated version
+                                    student.grade.earnedSummative -= parseInt(result);
+                                    student.grade.earnedSummative += parseInt(grade);
+                                    student.grade.summative = 100*(student.grade.earnedSummative/student.grade.worthSummative)
+                                    student.grade.overall = ((output.summative/100)*student.grade.summative)+((output.classwork/100)*student.grade.classwork)+((output.independent/100)*student.grade.independent) // formula for combining three categories into an overall grade
+                                    console.log(student)
+                                    update(child(gradesRef, studentID, 'grade/'), student)
+                                  })
                                 }
                               })
 
                             } else if(type === "classwork"){
                               getStudentAssignmentGrade(assignmentID, target).then((result)=>{
-                                if (result === "N/A"){
-                                  student.grade.earnedClasswork += parseInt(grade);
-                                  student.grade.worthClasswork += parseInt(worth);
-                                  update(child(gradesRef, studentID, 'grade/'), student)
+                                 // execute if there is no grade on the assignment
+                                 if (result === "N/A"){
+                                  getGradingPolicy(classroomID).then((output)=>{
+                                    student.grade.earnedClasswork += parseInt(grade);
+                                    student.grade.worthClasswork += parseInt(worth);
+                                    student.grade.classwork = 100*(student.grade.earnedClasswork/student.grade.worthClasswork)
+                                    student.grade.overall = ((output.summative/100)*student.grade.summative)+((output.classwork/100)*student.grade.classwork)+((output.independent/100)*student.grade.independent) // formula for combining three categories into an overall grade
+                                    update(child(gradesRef, studentID, 'grade/'), student)
+                                  })
                                 } else {
-                                  student.grade.earnedClasswork -= result;
-                                  student.grade.earnedClasswork += parseInt(grade);
-                                  update(child(gradesRef, studentID, 'grade/'), student)
+                                  getGradingPolicy(classroomID).then((output)=>{
+                                    // subtract grade from the original then added the updated version
+                                    student.grade.earnedClasswork -= parseInt(result);
+                                    student.grade.earnedClasswork += parseInt(grade);
+                                    student.grade.classwork = 100*(student.grade.earnedClasswork/student.grade.worthClasswork)
+                                    student.grade.overall = ((output.summative/100)*student.grade.summative)+((output.classwork/100)*student.grade.classwork)+((output.independent/100)*student.grade.independent) // formula for combining three categories into an overall grade
+                                    update(child(gradesRef, studentID, 'grade/'), student)
+                                  })
                                 }
                               })
                             } else if(type === "independent"){
                               getStudentAssignmentGrade(assignmentID, target).then((result)=>{
+                                // execute if there is no grade on the assignment
                                 if (result === "N/A"){
-                                  student.grade.earnedIndependent += parseInt(grade);
-                                  student.grade.worthIndependent += parseInt(worth);
-                                  update(child(gradesRef, studentID, 'grade/'), student)
+                                  getGradingPolicy(classroomID).then((output)=>{
+                                    student.grade.earnedIndependent += parseInt(grade);
+                                    student.grade.worthIndependent += parseInt(worth);
+                                    student.grade.independent = 100*(student.grade.earnedIndependent/student.grade.worthIndependent)
+                                    student.grade.overall = ((output.summative/100)*student.grade.summative)+((output.classwork/100)*student.grade.classwork)+((output.independent/100)*student.grade.independent) // formula for combining three categories into an overall grade
+                                    update(child(gradesRef, studentID, 'grade/'), student)
+                                  })
                                 } else {
-                                  student.grade.earnedIndependent -= result;
-                                  student.grade.earnedIndependent += parseInt(grade);
-                                  update(child(gradesRef, studentID, 'grade/'), student)
+                                  getGradingPolicy(classroomID).then((output)=>{
+                                    // subtract grade from the original then added the updated version
+                                    student.grade.earnedIndependent -= parseInt(result);
+                                    student.grade.earnedIndependent += parseInt(grade);
+                                    student.grade.independent = 100*(student.grade.earnedIndependent/student.grade.worthIndependent)
+                                    student.grade.overall = ((output.summative/100)*student.grade.summative)+((output.classwork/100)*student.grade.classwork)+((output.independent/100)*student.grade.independent) // formula for combining three categories into an overall grade
+                                    update(child(gradesRef, studentID, 'grade/'), student)
+                                  })
                                 }
                               })
                             }
@@ -195,7 +244,6 @@ const Teacher = (props) => {
   }
       function deleteClassroom(classroomID) {
         return new Promise((resolve, reject) => {
-            const dbRef = ref(db);
             const classroomRef = child(dbRef, 'classrooms/' + classroomID);
 
             remove(classroomRef);
@@ -205,7 +253,6 @@ const Teacher = (props) => {
     //classroom, email to remove
     function removeFromClassroom(a, b) {
       return new Promise((resolve, reject) => {
-        const dbRef = ref(db);
         get(child(dbRef, 'classrooms/' + a)).then((snapshot) => {
           if(snapshot.exists()) {
             let array = snapshot.val().students;
@@ -243,6 +290,7 @@ const Teacher = (props) => {
 
         //error handling
         input.forEach((i) => {
+          console.log(i)
           const a = i.split("");
           if(!a.includes("@") || a.length < 2) {
             errorToast("Students were not added in the correct format. Please read the directions and try again!");
@@ -252,18 +300,20 @@ const Teacher = (props) => {
 
 
         input.forEach((i) => {
+          console.log(i)
           //checking that added students exist in the database
           getStudents(i)
           .then((result) => {
+            console.log(result + "result")  // null
+            console.log(classroom.grades.student) // undefined
             if(result === null) {
               errorToast(`${i} does not have an account. Please have the student register first!`);
               return;
-            } else if(classroom.students.includes(i)) {
+            } else if(classroom.grades.student === i) {
               errorToast("This student is already in your classroom!");
               return;
             } else {
               alert("Done!")
-              const dbRef = ref(db);
               //updating students array in classroom object of database
               get(child(dbRef, 'classrooms/' + classroom.id)).then((snapshot) => {
                 if(snapshot.exists()) {
@@ -272,7 +322,34 @@ const Teacher = (props) => {
                     array.push(i)
                   })
                   set(ref(db, 'classrooms/' + classroom.id + '/students'), array)
-                  window.location.reload();
+                  // window.location.reload();
+                }
+              })
+              //update grade system;
+              get(child(dbRef, 'classrooms/' + classroom.id)).then((snapshot) => {
+                if(snapshot.exists()) {
+                  let array2 = snapshot.val().grades;
+                  input.forEach((i) => {
+                    array2.push({"student": i, "grade": {"summative": 100, "earnedSummative":0, "worthSummative": 0,"classwork": 100, "earnedClasswork": 0, "worthClasswork": 0, "independent": 100, "earnedIndependent":0, "worthIndependent": 0, "overall": 100}})
+                  })
+                  set(ref(db, 'classrooms/' + classroom.id + '/grades'), array2)
+                  // window.location.reload();
+                }
+              })
+              //update assignments
+              get(child(dbRef, 'assignments')).then((snapshot) => {
+                if(snapshot.exists()) {
+                  const data = snapshot.val();
+                  for(let key in data) {
+                    if(data[key].classroomID === classroom.id) {
+                      let array3 = data[key].grades;
+                      input.forEach((i) => {
+                        array3.push({"grade": "N/A", "student": i});
+                        set(ref(db, 'assignments/' + data[key].assignmentID + "/" + "/grades"), array3)
+                        window.location.reload();
+                      })
+                    }
+                  }
                 }
               })
             }
@@ -367,7 +444,7 @@ const Teacher = (props) => {
                   student.innerHTML = i;
                   student.classList.add("deez");
                   studentWrapper.appendChild(student);
-                  if(classroom.students.length > 1) {
+                  if(classroom.grades.length > 1) {
                     student.addEventListener("click", () => { //make it so that if you click the student they can be deleted by using innerHTML as reference
                       getStudents(student.innerHTML)
                       .then((result) => {
@@ -401,14 +478,17 @@ const Teacher = (props) => {
             refreshButton.remove();
           }
       })
-      let output = []
       //add assignment
       addAssignmentButton.addEventListener("click", () => {
         if(document.querySelector('.deez') === null) { //if dropdown currently closed
-          fetchAssignments(classroom.id, output)
+          fetchAssignments(classroom.id)
           .then((result) => {
-            if(result === null) {
+            if(result[0] === undefined) {
               console.log("no assignments");
+              const assignmentP = document.createElement("p");
+              assignmentP.classList.add("assignment-item");
+              assignmentP.innerHTML = "There is currently no assignments in this classroom"
+              document.querySelector(".assignmentForm").appendChild(assignmentP);
             } else {
               result.forEach((i, count) => {
                 const assignmentP = document.createElement("p");
@@ -455,7 +535,7 @@ const Teacher = (props) => {
                 student.classList.add("deez");
                 student.setAttribute('id', i.replace(/[.@]/g, "")); //create students with p element and give them id based on their email
                 studentWrapper.appendChild(student);
-                getStudentGrade(classroom.id, student.innerHTML) //create tooltip for each p element with the student's greade
+                getStudentGrade(classroom.id, i) //create tooltip for each p element with the student's greade
                 .then((result) => {
                   tippy(`#${i.replace(/[.@]/g, "")}`, {
                     content: result,
@@ -466,12 +546,10 @@ const Teacher = (props) => {
                   const getAssignmentNumber = parseInt(prompt("Which assignment grade do you want to edit for the student? Please type the number that you see corrosponding in the assignment list above."));
 
                   const getAssignment = document.querySelector(`.assignment-item[name="${getAssignmentNumber}"]`);
-                  console.log(getAssignment)
                   if(getAssignment === null) {
                     alert("This assignment does not exist");
                     return;
                   }
-                  const dbRef = ref(db);
                   const gradesRef = child(dbRef, 'assignments/' + getAssignment.id)
                   get(gradesRef).then((snapshot)=>{
                     if(snapshot.exists()){
@@ -483,10 +561,7 @@ const Teacher = (props) => {
                           return
                         } else {
                           // alert("Ok i will change this");
-                          console.log("worker")
                           updateStudentGrade(classroom.id, student.innerHTML, getAssignmentGrade, snapshot.val().worth, snapshot.val().type, getAssignment.id)
-
-                          console.log("working")
                           updateAssignmentGradeDB(getAssignment.id, student.innerHTML, getAssignmentGrade,)
 
                           return;
@@ -548,7 +623,6 @@ const Teacher = (props) => {
 
     function checkIfClassroomExists(classroomID) {
         return new Promise((resolve, reject) => {
-            const dbRef = ref(db);
             get(child(dbRef, 'classrooms/' + classroomID)).then((snapshot) => {
                 if (snapshot.exists()) {
                     resolve(snapshot.val());
@@ -701,9 +775,9 @@ const Teacher = (props) => {
 
     }
 
-    function fetchAssignments(classroomID, output) {
+    function fetchAssignments(classroomID) {
       return new Promise((resolve, reject) => {
-        const dbRef = ref(db);
+        let output = []
         get(child(dbRef, 'assignments/')).then((snapshot) => {
           if(snapshot.exists()) {
             const data = snapshot.val();
@@ -724,7 +798,7 @@ const Teacher = (props) => {
             resolve(null);
           }
         }).catch((error) => {
-          // console.log(error);
+          console.log(error);
           reject(error);
         })
       })
@@ -732,7 +806,6 @@ const Teacher = (props) => {
 
     function updateAssignmentGradeDB(assignmentID, student, newGrade) {
       return new Promise((resolve, reject) => {
-        const dbRef = ref(db);
         const gradesRef = child(dbRef, 'assignments/' + assignmentID + '/grades');
         get(gradesRef).then((snapshot) => {
           if (snapshot.exists()) {
