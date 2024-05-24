@@ -97,6 +97,13 @@ const Student = (props) => {
       const viewAssignmentsButton = document.createElement("button");
       viewAssignmentsButton.innerHTML = "View Assignments";
 
+      fetchAssignments(classroom.id)
+      .then((result) => {
+        if(result.length < 1) {
+          viewAssignmentsButton.style.display = "none";
+        }
+      })
+
       viewAssignmentsButton.addEventListener("click", () => {
         if(document.querySelector('.deez') === null) {
           fetchAssignments(classroom.id)
