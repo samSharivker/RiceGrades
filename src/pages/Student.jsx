@@ -133,7 +133,10 @@ const Student = (props) => {
       })
 
       //all display elements first being added to the wrapper
+      const line = document.createElement("hr");
+
       classInfoWrapper.appendChild(className);
+      classInfoWrapper.appendChild(line);
       classInfoWrapper.appendChild(classTeacher);
       classInfoWrapper.appendChild(classOverallGrade);
       classInfoWrapper.appendChild(classIndependentGrade);

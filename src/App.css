@@ -1,6 +1,7 @@
 /* https://colorhunt.co/palette/61826479ac78b0d9b1d0e7d2 */
 @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 :root {
     --body-color: green;
@@ -571,10 +572,11 @@ svg {
 
 .class-list {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     gap: 4rem;
     padding: 2rem 0rem;
+    flex-wrap: wrap;
 }
 
 .class-list button {
@@ -584,11 +586,12 @@ svg {
 }
 
 .class-list li {
-    max-width: 35rem;
+    /* max-width: 35rem; */
+    max-width: calc(50% - 20px);
     list-style: none;
     display: flex;
     flex-direction: column;
-    padding: 2rem;
+    padding: 3rem;
     border-radius: 5px;
     border: 5px solid black;
     /* background: linear-gradient(#9a9a9a, #454545); */
@@ -610,15 +613,19 @@ svg {
     padding: 0.5rem;
 }
 
+.class-list hr {
+    border: 1px solid black;
+}
+
 .student-assignments-wrapper h {
     font-size: 2.5rem;
 }
 
 .student-page {
-    /* background: linear-gradient(#618264, #79AC78); */
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     min-height: 100vh;
 }
 
@@ -673,6 +680,7 @@ svg {
 .class-bg-img {
     /* background: url('https://t3.ftcdn.net/jpg/04/18/40/68/360_F_418406808_Q9kgFC40dofexEzwDmmRxZmskZUtm3d2.jpg') center/cover no-repeat; */
     background: url('../src/img/rice.jpg') center/cover no-repeat;
+    font-family: "Open Sans", sans-serif;
 }
 
 .class-bg-tint {
