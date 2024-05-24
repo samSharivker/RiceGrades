@@ -1,6 +1,7 @@
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import Logo from '../img/logo.png';
+import Rice from '../img/rice-cooker-img.png';
 
 export default function Home() {
     return (
@@ -10,7 +11,7 @@ export default function Home() {
                 <div className="header">
                     <div className="container">
                         <p>"Cook your Grades like your Rice" - Jiaming Lin</p>
-                        <img src="https://placehold.co/400x400.png" alt="temp" />
+                        <img id="rice-img" src={Rice} alt="temp" />
                     </div>
                 </div>
             </section>
