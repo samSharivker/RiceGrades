@@ -592,12 +592,11 @@ svg {
 }
 
 .class-list li {
-    /* max-width: 35rem; */
     max-width: calc(50% - 20px);
     list-style: none;
     display: flex;
     flex-direction: column;
-    padding: 3rem;
+    padding: 5rem;
     border-radius: 5px;
     border: 5px solid black;
     /* background: linear-gradient(#9a9a9a, #454545); */
@@ -621,6 +620,36 @@ svg {
 
 .class-list hr {
     border: 1px solid black;
+}
+
+@media (max-width: 801px) {
+    .class-list li {
+        max-width: calc(70% - 20px)
+    }
+}
+
+@media (max-width: 600px) {
+    .class-list li {
+        max-width: calc(80% - 20px)
+    }
+}
+
+@media (max-width: 480px) {
+    .class-list li {
+        max-width: calc(90% - 20px)
+    }
+}
+
+@media (max-width: 440px) {
+    .class-list h {
+        font-size: 3rem;
+    }
+    .students-assignments-wrapper h {
+        font-size: 1rem;
+    }
+    .class-list p {
+        font-size: 1rem;
+    }
 }
 
 .student-assignments-wrapper h {
@@ -664,15 +693,6 @@ svg {
     border-radius: 5px;
 }
 
-@media screen and (max-width: 455px) {
-    .class-list h {
-        font-size: 3rem;
-    }
-    .class-list p {
-        font-size: 1rem;
-    }
-}
-
 .full-classroom-wrapper {
     min-height: 100vh;
     background: linear-gradient(#618264, #79AC78);
@@ -690,5 +710,5 @@ svg {
 }
 
 .class-bg-tint {
-    background-color: rgba(97, 130, 100, 0.9);
+    background-color: rgba(97, 130, 100, 0.85);
 }
