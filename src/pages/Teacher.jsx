@@ -66,6 +66,7 @@ const Teacher = (props) => {
     }
 
     getClassrooms() //runs on page load
+    displayCurrentUser()
 
     function getStudents(target) {
       return new Promise((resolve, reject) => {
@@ -836,13 +837,37 @@ const Teacher = (props) => {
       });
     }
 
+    function displayCurrentUser() {
+      get(child(dbRef, 'users/')).then((snapshot) => {
+        if(snapshot.exists()) {
+          const data = snapshot.val();
+          for(let key in data) {
+            if(data[key].email === user.user.email) {
+              document.querySelector("#current-user-name").innerHTML = data[key].firstName;
+              document.querySelector("#current-user-last").innerHTML = data[key].lastName;
+              document.querySelector("#current-user-email").innerHTML = data[key].email;
+            }
+          }
+        }
+      })
+    }
+
     return (
         <div>
             <Nav />
-            <button onClick={createClassroom}>Create Classroom</button>
-            <p>teacher page</p>
-            <div className="classroom-wrapper"></div>
-            <button onClick={handleSignOut}>Sign Out</button>
+            <div className="class-bg-img">
+              <div className="class-bg-tint">
+                <div className="student-page">
+                  <div className="display-current-user">
+                    <p><span id="current-user-name"></span> <span id="current-user-last"></span></p>
+                    <p id="current-user-email"></p>
+                    <button onClick={createClassroom}>Create Classroom</button>
+                    <button onClick={handleSignOut}>Sign Out</button>
+                  </div>
+                  <div className="classroom-wrapper"></div>
+                </div>
+              </div>
+            </div>
             <Footer />
         </div>
     );
