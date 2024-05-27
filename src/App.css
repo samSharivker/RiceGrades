@@ -502,7 +502,8 @@ svg {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    gap: 1rem;
+    gap: 4rem;
+    padding: 2rem 0rem;
     flex-wrap: wrap;
 }
 
@@ -713,4 +714,50 @@ svg {
 
 .class-bg-tint {
     background-color: rgba(97, 130, 100, 0.85);
+}
+
+.assignmentForm {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.assignmentForm input {
+    border: transparent;
+    border-radius: 5px;
+    padding: 0.5rem;
+    background-color: var(--main-bg-color);
+    color: white;
+}
+
+.assignmentForm input::placeholder {
+    color: white;
+}
+
+@media (max-width: 992px) {
+    .classroom {
+        max-width: calc(70% - 20px);
+    }
+}
+
+@media (max-width: 768px) {
+    .classroom {
+        max-width: calc(85% - 20px);
+    }
+}
+
+@media (max-width: 576px) {
+    .classroom {
+        max-width: calc(95% - 20px);
+    }
+    .classroom h {
+        font-size: 3rem;
+    }
+    .classroom p {
+        font-size: 1rem;
+    }
+    .classroom .classroom-button-wrapper {
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
 }
