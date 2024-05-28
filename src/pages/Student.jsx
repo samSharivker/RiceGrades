@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { ref, child, get} from "firebase/database";
+import HandleGame from '../components/HandleGame';
 
 const Student = (props) => {
   const [user] = useState(props);
@@ -196,6 +198,7 @@ const Student = (props) => {
 
   getClassrooms() //runs on page load
   displayCurrentUser() //runs on page load
+  calcAverage()
 
   function displayCurrentUser() {
     get(child(dbRef, 'users/')).then((snapshot) => {
@@ -207,6 +210,28 @@ const Student = (props) => {
             document.querySelector("#current-user-last").innerHTML = data[key].lastName;
             document.querySelector("#current-user-email").innerHTML = data[key].email;
           }
+        }
+      }
+    })
+  }
+
+  function calcAverage() {
+    get(child(dbRef, 'classrooms/')).then((snapshot) => {
+      if(snapshot.exists()) {
+        const data = snapshot.val();
+        let dividend = 0;
+        let divisor = 0;
+        for(let key in data) {
+          for(let z in data[key].grades) {
+            if(data[key].grades[z].student === user.user.email) {
+              dividend += data[key].grades[z].grade.overall;
+              divisor++;
+            }
+          }
+        }
+        const average = roundGrade(dividend / divisor);
+        if(average > 80) {
+          ReactDOM.render(<HandleGame />, document.querySelector(".game-wrapper"));
         }
       }
     })
@@ -226,6 +251,7 @@ const Student = (props) => {
             <div className="student-class-wrapper">
               <ul className="class-list"></ul>
             </div>
+            <div className="game-wrapper"></div>
           </div>
         </div>
       </div>
