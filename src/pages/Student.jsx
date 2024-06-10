@@ -178,12 +178,14 @@ const Student = (props) => {
                     Iterates through classrooms in database to see if their students array contain the current authenticated student.
                     If they are in the array then that means that a teacher had to have added them to that classroom.
                     */
-                    if(students.includes(user.user.email)) {
-                      data[key].grades.forEach((i) => {
-                        if(i.student === user.user.email) {
-                          displayClassroom(data[key], [roundGrade(i.grade.overall) + "%", roundGrade(i.grade.independent) + "%", roundGrade(i.grade.summative) + "%", roundGrade(i.grade.classwork) + "%"]) //classroom data and student grade
-                        }
-                      })
+                    if(students) {
+                      if(students.includes(user.user.email)) {
+                        data[key].grades.forEach((i) => {
+                          if(i.student === user.user.email) {
+                            displayClassroom(data[key], [roundGrade(i.grade.overall) + "%", roundGrade(i.grade.independent) + "%", roundGrade(i.grade.summative) + "%", roundGrade(i.grade.classwork) + "%"]) //classroom data and student grade
+                          }
+                        })
+                      }
                     }
                   }
               } else {
