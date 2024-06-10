@@ -380,7 +380,9 @@ const Teacher = (props) => {
         }
 
         const b = document.createElement("p");
-        b.innerHTML = `Number of Students: ${classroom.students.length}`;
+        if(classroom.students) {
+          b.innerHTML = `Number of Students: ${classroom.students.length}`;
+        }
         b.classList.add("student-count-display")
 
         const classroomButtonWrapper = document.createElement("div");
@@ -440,7 +442,8 @@ const Teacher = (props) => {
         viewStudentsButton.addEventListener("click", () => {
           if(document.querySelector('.deez') === null) { //if dropdown currently closed
               studentWrapper.appendChild(addStudentsButton);
-              classroom.students.forEach((i) => {
+              if(classroom.students) {
+                classroom.students.forEach((i) => {
                   const student = document.createElement("p");
                   student.innerHTML = i;
                   student.classList.add("deez");
@@ -466,6 +469,7 @@ const Teacher = (props) => {
                     })
                   }
               })
+              }
           } else {
             //handle close dropdown
             const temp = document.querySelectorAll('.deez');
@@ -530,76 +534,78 @@ const Teacher = (props) => {
 
 
             studentWrapper.appendChild(refreshButton); // refresh view button
-            classroom.students.forEach((i) => {
-                const student = document.createElement("p");
-                student.innerHTML = i;
-                student.classList.add("deez");
-                student.setAttribute('id', i.replace(/[.@]/g, "")); //create students with p element and give them id based on their email
-                studentWrapper.appendChild(student);
-                getStudentGrade(classroom.id, i) //create tooltip for each p element with the student's greade
-                .then((result) => {
-                  tippy(`#${i.replace(/[.@]/g, "")}`, {
-                    content: result,
-                    placement: 'right'
+            if(classroom.students) {
+                classroom.students.forEach((i) => {
+                  const student = document.createElement("p");
+                  student.innerHTML = i;
+                  student.classList.add("deez");
+                  student.setAttribute('id', i.replace(/[.@]/g, "")); //create students with p element and give them id based on their email
+                  studentWrapper.appendChild(student);
+                  getStudentGrade(classroom.id, i) //create tooltip for each p element with the student's greade
+                  .then((result) => {
+                    tippy(`#${i.replace(/[.@]/g, "")}`, {
+                      content: result,
+                      placement: 'right'
+                    })
                   })
-                })
-                student.addEventListener("click", () => {
-                  const getAssignmentNumber = parseInt(prompt("Which assignment grade do you want to edit for the student? Please type the number that you see corrosponding in the assignment list above."));
+                  student.addEventListener("click", () => {
+                    const getAssignmentNumber = parseInt(prompt("Which assignment grade do you want to edit for the student? Please type the number that you see corrosponding in the assignment list above."));
 
-                  const getAssignment = document.querySelector(`.assignment-item[name="${getAssignmentNumber}"]`);
-                  if(getAssignment === null) {
-                    alert("This assignment does not exist");
-                    return;
-                  }
-                  const gradesRef = child(dbRef, 'assignments/' + getAssignment.id)
-                  get(gradesRef).then((snapshot)=>{
-                    if(snapshot.exists()){
-                      if(snapshot.val().type === "summative"){
-                        const getAssignmentGrade = parseInt(prompt("What grade do you want the student to have for this assignment? They currently have a:\n[ex number] / [worth]"));
-
-                        if(isNaN(getAssignmentGrade)) {
-                          alert("Not a valid number!");
-                          return
-                        } else {
-                          // alert("Ok i will change this");
-                          updateStudentGrade(classroom.id, student.innerHTML, getAssignmentGrade, snapshot.val().worth, snapshot.val().type, getAssignment.id)
-                          updateAssignmentGradeDB(getAssignment.id, student.innerHTML, getAssignmentGrade,)
-
-                          return;
-                        }
-                      } else if(snapshot.val().type === "classwork"){
-                          const getAssignmentGrade = parseInt(prompt("What grade do you want the student to have for this assignment? They currently have a:\n[ex number] / [worth]"));
-
-                          if(isNaN(getAssignmentGrade)) {
-                            alert("Not a valid number!");
-                            return
-                          } else {
-                            // alert("Ok i will change this");
-                            updateStudentGrade(classroom.id, student.innerHTML, getAssignmentGrade, snapshot.val().worth, snapshot.val().type, getAssignment.id)
-                            updateAssignmentGradeDB(getAssignment.id, student.innerHTML, getAssignmentGrade)
-                            return;
-                          }
-
-                      } else if(snapshot.val().type === "independent"){
-                          const getAssignmentGrade = parseInt(prompt("What grade do you want the student to have for this assignment? They currently have a:\n[ex number] / [worth]"));
-
-                          if(isNaN(getAssignmentGrade)) {
-                            alert("Not a valid number!");
-                            return
-                          } else {
-                            // alert("Ok i will change this");
-                            updateStudentGrade(classroom.id, student.innerHTML, getAssignmentGrade, snapshot.val().worth, snapshot.val().type, getAssignment.id)
-
-                            updateAssignmentGradeDB(getAssignment.id, student.innerHTML, getAssignmentGrade)
-
-
-                            return;
-                          }
-                      }
+                    const getAssignment = document.querySelector(`.assignment-item[name="${getAssignmentNumber}"]`);
+                    if(getAssignment === null) {
+                      alert("This assignment does not exist");
+                      return;
                     }
+                    const gradesRef = child(dbRef, 'assignments/' + getAssignment.id)
+                    get(gradesRef).then((snapshot)=>{
+                      if(snapshot.exists()){
+                        if(snapshot.val().type === "summative"){
+                          const getAssignmentGrade = parseInt(prompt("What grade do you want the student to have for this assignment? They currently have a:\n[ex number] / [worth]"));
+
+                          if(isNaN(getAssignmentGrade)) {
+                            alert("Not a valid number!");
+                            return
+                          } else {
+                            // alert("Ok i will change this");
+                            updateStudentGrade(classroom.id, student.innerHTML, getAssignmentGrade, snapshot.val().worth, snapshot.val().type, getAssignment.id)
+                            updateAssignmentGradeDB(getAssignment.id, student.innerHTML, getAssignmentGrade,)
+
+                            return;
+                          }
+                        } else if(snapshot.val().type === "classwork"){
+                            const getAssignmentGrade = parseInt(prompt("What grade do you want the student to have for this assignment? They currently have a:\n[ex number] / [worth]"));
+
+                            if(isNaN(getAssignmentGrade)) {
+                              alert("Not a valid number!");
+                              return
+                            } else {
+                              // alert("Ok i will change this");
+                              updateStudentGrade(classroom.id, student.innerHTML, getAssignmentGrade, snapshot.val().worth, snapshot.val().type, getAssignment.id)
+                              updateAssignmentGradeDB(getAssignment.id, student.innerHTML, getAssignmentGrade)
+                              return;
+                            }
+
+                        } else if(snapshot.val().type === "independent"){
+                            const getAssignmentGrade = parseInt(prompt("What grade do you want the student to have for this assignment? They currently have a:\n[ex number] / [worth]"));
+
+                            if(isNaN(getAssignmentGrade)) {
+                              alert("Not a valid number!");
+                              return
+                            } else {
+                              // alert("Ok i will change this");
+                              updateStudentGrade(classroom.id, student.innerHTML, getAssignmentGrade, snapshot.val().worth, snapshot.val().type, getAssignment.id)
+
+                              updateAssignmentGradeDB(getAssignment.id, student.innerHTML, getAssignmentGrade)
+
+
+                              return;
+                            }
+                        }
+                      }
+                    })
                   })
-                })
-            })
+              })
+            }
         } else {
           //handle close dropdown
           const temp = document.querySelectorAll('.deez');
