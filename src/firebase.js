@@ -9,14 +9,14 @@ import { getDatabase } from "firebase/database";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyAmxbM9wW6RtgSO-MPUGYVTpI1KeukpMz0",
-  databaseURL: "https://rice-grades-default-rtdb.firebaseio.com",
-  authDomain: "rice-grades.firebaseapp.com",
-  projectId: "rice-grades",
-  storageBucket: "rice-grades.appspot.com",
-  messagingSenderId: "944015683449",
-  appId: "1:944015683449:web:3779c89a3196ca590449a8",
-  measurementId: "G-00PRWQ4SWQ"
+  apiKey: process.env.FIREBASE_API_KEY,
+  databaseURL: process.env.FIREBASE_DATABASE_URL,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env_FIREBASE_MESSAGE_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
