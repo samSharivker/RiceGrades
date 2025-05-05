@@ -12,7 +12,7 @@ export default function Home() {
             <section id="header">
                 <div className="header">
                     <div className="container">
-                        <p>"Cook your Grades like your Rice" - Jiaming Lin</p>
+                        <p>"Cook your Grades like your Rice" - John Doe</p>
                         <img id="rice-img" src="https://placehold.co/600x400" alt="temp" />
                     </div>
                 </div>
